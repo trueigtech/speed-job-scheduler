@@ -179,7 +179,6 @@ const config = convict({
       env: 'SENDER_EMAIL'
     },
   },
-
   aws: {
     bucket: {
       default: '',
