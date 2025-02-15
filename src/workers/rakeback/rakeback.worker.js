@@ -1,13 +1,13 @@
 import db from '@src/db/models';
 import { Logger } from '@src/libs/logger';
 import WorkerBase from '@src/libs/workerBase';
-import { RackbackService } from '@src/services/bonus/rackbackBonus/rakeback.service';
+import { RakebackService } from '@src/services/bonus/rakebackBonus/rakeback.service';
 
 class GiveRakebackWorker extends WorkerBase {
   async run() {
     const transaction = await db.sequelize.transaction();
     try {
-      const result = new RackbackService.run({}, { sequelizeTransaction: transaction });
+      const result = await RakebackService.run({}, { sequelizeTransaction: transaction });
       await transaction.commit();
 
       return result

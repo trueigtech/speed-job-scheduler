@@ -1,11 +1,11 @@
-import { JOB_Rakeback, rakebackQueue } from '@src/queues/rakeback.queue'
+import { JOB_RAKEBACK, rakebackQueue } from '@src/queues/rakeback.queue'
 const EVERY_FRIDAY = '0 2 * * 5'; // At 2 AM UTC every Friday
 
 rakebackQueue.add(
-  JOB_Rakeback,
+  JOB_RAKEBACK,
   {},
   {
-    jobId: JOB_Rakeback,
+    jobId: JOB_RAKEBACK,
     removeOnComplete: 10,
     repeat: {
       cron: EVERY_FRIDAY

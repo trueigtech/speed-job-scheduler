@@ -4,7 +4,7 @@ import { BaseHandler } from '@src/libs/logicBase';
 import { TransactionHandlerHandler } from "@src/services/wallet";
 import { COINS, TRANSACTION_PURPOSE } from '@src/utils/constants/public.constants';
 
-export class RackbackService extends BaseHandler {
+export class RakebackService extends BaseHandler {
 
   async run() {
 

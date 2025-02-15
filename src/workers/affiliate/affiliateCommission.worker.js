@@ -1,25 +1,19 @@
-import WorkerBase from '@src/libs/workerBase'
-import db from '@src/db/models';
-import { EarnedCommissionService } from '@src/services/affiliate/earnCommission.service'
+import WorkerBase from '@src/libs/workerBase';
+import { AffiliateCommissionService } from '@src/services/bonus/afliliateBonus/affilateBonus.service';
 
-class EarnCommissionWorker extends WorkerBase {
+class AffiliateCommissionWorker extends WorkerBase {
   async run() {
-    const sequelize = db.sequelize;
-    const transaction = await sequelize.transaction()
     try {
-      const service = new EarnedCommissionService({ sequelize });
+      const result = await AffiliateCommissionService.run({});
 
-      const result = await service.run();
-      await transaction.commit()
       return result
     } catch (error) {
-      await transaction.rollback()
       throw error
     }
   }
 }
 
 export default async () => {
-  const result = await EarnCommissionWorker.run();
+  const result = await AffiliateCommissionWorker.run();
   return result
 }

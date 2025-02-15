@@ -21,7 +21,7 @@ const opts = {
   }
 }
 
-export const JOB_Rakeback = 'Rakeback';
+export const JOB_RAKEBACK = 'Rakeback';
 export const rakebackQueue = new Queue('Rakeback-Queue', {
   ...opts
 });
