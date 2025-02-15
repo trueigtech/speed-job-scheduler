@@ -1,5 +1,0 @@
-export * from './createPayment.service'
-export * from './getPaymentIPN.service'
-export * from './getAuthToken.service'
-export * from './getCurrencies.service'
-export * from './getConversion.service'
