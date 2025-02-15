@@ -26,6 +26,7 @@ export const TRANSACTION_PURPOSE = {
   BONUS_FORFEIT: 'bonus_forfeit',
   BONUS_WIN: 'bonus_win',
   BONUS_DROP: 'bonus_drop',
+  BONUS_RACKBACK: 'bonus_rackback',
 
   // Faucet transactions
   FAUCET_AWAIL: 'faucet_awail',
