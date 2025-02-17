@@ -7,7 +7,7 @@ class GiveRakebackWorker extends WorkerBase {
   async run() {
     const transaction = await db.sequelize.transaction();
     try {
-      const result = await RakebackService.run({}, { sequelizeTransaction: transaction });
+      const result = await RakebackService.execute({}, { sequelizeTransaction: transaction });
       await transaction.commit();
 
       return result
@@ -20,6 +20,6 @@ class GiveRakebackWorker extends WorkerBase {
 }
 
 export default async () => {
-  const result = await GiveRakebackWorker.run();
+  const result = await GiveRakebackWorker.execute();
   return result;
 };

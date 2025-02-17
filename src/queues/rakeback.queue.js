@@ -15,13 +15,13 @@ const opts = {
   },
   redis: queueWorkerRedisClient.connectionOptions,
   defaultJobOptions: {
-    attempts: 10,
+    attempts: 1,
     backoff: 60000,
     removeOnComplete: 10
   }
 }
 
 export const JOB_RAKEBACK = 'Rakeback';
-export const rakebackQueue = new Queue('Rakeback-Queue', {
+export const rakebackQueue = new Queue('Bonus-Queue', {
   ...opts
 });

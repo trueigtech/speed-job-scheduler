@@ -7,30 +7,30 @@ import { COINS, TRANSACTION_PURPOSE } from '@src/utils/constants/public.constant
 export class RakebackService extends BaseHandler {
 
   async run() {
+    try {
+      const calculateLastWeekDateRange = () => {
 
-    const calculateLastWeekDateRange = () => {
+        const today = serverDayjs().startOf('day'); // This gives you the current date at 12 AM UTC
+        // Calculate the day of the week (0 = Sunday, 1 = Monday, ..., 5 = Friday, 6 = Saturday)
+        const dayOfWeek = today.day();
+        // Calculate last Friday's date
+        let lastFriday = today.subtract(dayOfWeek + 2, 'days'); // Subtract the number of days to get to Friday
 
-      const today = serverDayjs().startOf('day'); // This gives you the current date at 12 AM UTC
-      // Calculate the day of the week (0 = Sunday, 1 = Monday, ..., 5 = Friday, 6 = Saturday)
-      const dayOfWeek = today.day();
-      // Calculate last Friday's date
-      let lastFriday = today.subtract(dayOfWeek + 2, 'days'); // Subtract the number of days to get to Friday
+        // Set the start date to the last Friday 12:00 AM UTC
+        const startDate = lastFriday.startOf('day');
+        // Set the end date to the following Thursday 11:59:59 PM UTC
+        const endDate = lastFriday.add(6, 'days').endOf('day'); // Add 6 days to get to the following Thursday
 
-      // Set the start date to the last Friday 12:00 AM UTC
-      const startDate = lastFriday.startOf('day');
-      // Set the end date to the following Thursday 11:59:59 PM UTC
-      const endDate = lastFriday.add(6, 'days').endOf('day'); // Add 6 days to get to the following Thursday
+        return { startDate, endDate };
+      };
 
-      return { startDate, endDate };
-    };
+      // Example usage
+      const { startDate, endDate } = calculateLastWeekDateRange();
 
-    // Example usage
-    const { startDate, endDate } = calculateLastWeekDateRange();
+      // big issue is that what if admin or smoeone stop cron because of some reason and then run same logic that time issue will get created
+      // we can not count those data who are lost because of date filter
 
-    // big issue is that what if admin or smoeone stop cron because of some reason and then run same logic that time issue will get created
-    // we can not count those data who are lost because of date filter
-
-    const query = `
+      const query = `
             SELECT
               u."user_id",
               ud."vip_tier_id",
@@ -58,28 +58,31 @@ export class RakebackService extends BaseHandler {
             HAVING (COALESCE(SUM(tl."amount"), 0) - COALESCE(SUM(w."amount"), 0)) > 0;
             `
 
-    const result = await db.sequelize.query(query, {
-      replacements: { startDate: startDate.toISOString(), endDate: endDate.toISOString() },
-      type: db.sequelize.QueryTypes.SELECT
-    });
+      const result = await db.sequelize.query(query, {
+        replacements: { startDate: startDate.toISOString(), endDate: endDate.toISOString() },
+        type: db.sequelize.QueryTypes.SELECT
+      });
 
 
-    await Promise.all(
-      result.map(async (entry) => {
-        if (entry.rackback_amount !== null) {
-          const roundedAmount = parseFloat(entry.rackback_amount.toFixed(2));
+      await Promise.all(
+        result.map(async (entry) => {
+          if (entry.rackback_amount !== null) {
+            const roundedAmount = parseFloat(entry.rackback_amount.toFixed(2));
 
-          // Call the function with the necessary parameters
-          await TransactionHandlerHandler.execute({
-            userId: entry.user_id,
-            amount: roundedAmount,
-            currencyCode: COINS.SWEEP_COIN.BONUS_SWEEP_COIN,
-            purpose: TRANSACTION_PURPOSE.BONUS_RACKBACK
-          }, this.context);
-        }
-      })
-    );
+            // Call the function with the necessary parameters
+            await TransactionHandlerHandler.execute({
+              userId: entry.user_id,
+              amount: roundedAmount,
+              currencyCode: COINS.SWEEP_COIN.BONUS_SWEEP_COIN,
+              purpose: TRANSACTION_PURPOSE.BONUS_RACKBACK
+            }, this.context);
+          }
+        })
+      );
 
-    return result;
+      return result;
+    } catch (error) {
+      console.log(error)
+    }
   }
 }

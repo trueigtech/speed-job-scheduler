@@ -1,6 +1,6 @@
 import { Errors } from "@src/errors/errorCodes";
 import { sendSocketResponse } from "@src/helpers/response.helpers";
-import { SendMessageHandler } from "@src/services/chatModule/liveChat/sendMessage";
+// import { SendMessageHandler } from "@src/services/chatModule/liveChat/sendMessage";
 
 export default class ChatHandler {
     static async sendMessage(reqData, resCallback) {

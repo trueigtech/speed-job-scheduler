@@ -18,11 +18,11 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
     },
     gcAmount: {
-      type: DataTypes.DOUBLE(10, 2),
+      type: DataTypes.DOUBLE,
       defaultValue: 0.0
     },
     scAmount: {
-      type: DataTypes.DOUBLE(10, 2),
+      type: DataTypes.DOUBLE,
       defaultValue: 0.0
     },
     minPurchase: {

@@ -1,6 +1,6 @@
 import { sendResponse } from '@src/helpers/response.helpers'
-import { GetCmsInfoHandler, GetCmsPageHandler } from '@src/services/cms'
-import { SendPromotionsHandler } from '@src/services/settings/sendPromotions.service'
+// import { GetCmsInfoHandler, GetCmsPageHandler } from '@src/services/cms'
+// import { SendPromotionsHandler } from '@src/services/settings/sendPromotions.service'
 import {
   GetBannersHandler,
   GetCurrencyHandler,

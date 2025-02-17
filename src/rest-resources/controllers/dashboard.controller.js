@@ -1,7 +1,8 @@
 import { createBullBoard } from '@bull-board/api'
-import { ExpressAdapter } from '@bull-board/express'
 import { BullAdapter } from '@bull-board/api/bullAdapter'
+import { ExpressAdapter } from '@bull-board/express'
 import { affiliateCommissionQueue } from '@src/queues/affiliateCommission.queue'
+import { rakebackQueue } from '@src/queues/rakeback.queue'
 
 /**
  *
@@ -17,12 +18,13 @@ export default class DashboardController {
    * @return {object}
    * @memberof DashboardController
    */
-  static dashboard () {
+  static dashboard() {
     const serverAdapter = new ExpressAdapter()
 
     createBullBoard({
       queues: [
-        new BullAdapter(affiliateCommissionQueue)
+        new BullAdapter(affiliateCommissionQueue),
+        new BullAdapter(rakebackQueue),
       ],
       serverAdapter
     })
