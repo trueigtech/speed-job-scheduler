@@ -4,7 +4,7 @@ import v1Router from './v1'
 const apiRouter = express.Router()
 apiRouter.get('/', async (_, res) => {
   try {
-    res.json({ message: 'welcome player backend api' })
+    res.json({ message: 'welcome job scheduler api' })
   } catch (error) {
     res.status(503)
     res.send()

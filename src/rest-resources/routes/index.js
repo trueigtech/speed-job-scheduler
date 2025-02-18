@@ -2,13 +2,13 @@ import healthCheck from '@src/libs/healthCheck'
 import express from 'express'
 import apiRoutes from './api'
 import dashboardRouter from './dashboard.routes'
+// import { basicAuthentication } from '../middlewares/basicAuthentication.middleware'
 
 const router = express.Router()
 
 router.use('/dashboard', dashboardRouter);
 
-const NAMESPACE = '/api'
-router.use(`${NAMESPACE}`, apiRoutes)
+router.use('/api', apiRoutes)
 router.get('/healthcheck', async (_, res) => {
   try {
     const response = await healthCheck()

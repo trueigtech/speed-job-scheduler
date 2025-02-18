@@ -20,7 +20,6 @@ export default class DashboardController {
    */
   static dashboard() {
     const serverAdapter = new ExpressAdapter()
-
     createBullBoard({
       queues: [
         new BullAdapter(affiliateCommissionQueue),

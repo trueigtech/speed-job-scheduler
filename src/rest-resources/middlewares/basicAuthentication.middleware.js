@@ -1,4 +1,5 @@
 import config from "@src/configs/app.config";
+// import basicAuth from 'express-basic-auth'
 
 export const basicAuthentication = (req, res, next) => {
 
@@ -20,3 +21,9 @@ export const basicAuthentication = (req, res, next) => {
         return next(InvalidCredentialsErrorType)
     }
 }
+
+// export const basicAuthentication = basicAuth({
+//     users: { ['admin']: 'admin' },
+//     challenge: true
+//   })
+  

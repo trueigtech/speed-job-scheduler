@@ -1,4 +1,4 @@
-import Queue from 'bull';
+import Bull from 'bull'
 import Redis from 'ioredis'
 import queueWorkerRedisClient from '@src/libs/queueWorkerRedisClient';
 
@@ -10,18 +10,17 @@ const opts = {
       case 'subscriber':
         return queueWorkerRedisClient.publisherClient
       default:
-        return new Redis(opts)
+        return new Redis(queueWorkerRedisClient.connectionOptions)
     }
   },
   redis: queueWorkerRedisClient.connectionOptions,
   defaultJobOptions: {
     attempts: 1,
-    backoff: 60000,
+    backoff: 100,
     removeOnComplete: 10
   }
 }
-
-export const JOB_RAKEBACK = 'Rakeback';
-export const rakebackQueue = new Queue('Bonus-Queue', {
+export const rakebackQueue = new Bull('Bonus-Queue', {
   ...opts
 });
+export const JOB_RAKEBACK = 'Rakeback';

@@ -1,8 +1,8 @@
-import Queue from 'bull';
+import Bull from 'bull'
 import Redis from 'ioredis'
 import queueWorkerRedisClient from '@src/libs/queueWorkerRedisClient';
 
-const opts ={
+const opts = {
   createClient: function (type, opts) {
     switch (type) {
       case 'client':
@@ -10,7 +10,7 @@ const opts ={
       case 'subscriber':
         return queueWorkerRedisClient.publisherClient
       default:
-        return new Redis(opts)
+        return new Redis(queueWorkerRedisClient.connectionOptions)
     }
   },
   redis: queueWorkerRedisClient.connectionOptions,
@@ -21,7 +21,7 @@ const opts ={
   }
 }
 
-export const JOB_AFFILIATE_COMMISSION = 'AffiliateCommission';
-export const affiliateCommissionQueue = new Queue('Commission-Queue', {
+export const affiliateCommissionQueue = new Bull('Commission-Queue', {
   ...opts
 });
+export const JOB_AFFILIATE_COMMISSION = 'AffiliateCommission';

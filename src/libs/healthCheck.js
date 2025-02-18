@@ -10,7 +10,6 @@ export default async () => {
     timestamp: Date.now(),
     database: ERRORS.SERVICE_FAILED,
     cache: ERRORS.SERVICE_FAILED,
-    search: ERRORS.SERVICE_FAILED,
     server: SUCCESS_MSG.HEALTHCHECK_SUCCESS
   }
 

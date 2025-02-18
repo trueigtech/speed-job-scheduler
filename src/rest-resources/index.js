@@ -30,7 +30,7 @@ app.use(i18n.init)
 // CORS Configuration
 const corsOptions = {
   credentials: true,
-  origin: ['*', 'http://localhost:3000', 'http://localhost:8005', 'http://localhost:8080', 'http://23.22.245.215:8005'],
+  origin: ['*', 'http://localhost:3000', 'http://localhost:8005', 'http://localhost:8080', 'http://54.234.145.12:8006'],
   methods: ['GET, POST, PUT, PATCH, DELETE']
 }
 
@@ -40,7 +40,7 @@ app.use(cors(corsOptions))
 app.use(routes)
 
 app.use(async (req, res) => {
-  res.status(404).json({ message: 'Welcome to player backend' })
+  res.status(404).json({ message: 'Welcome to cron scheduler' })
 })
 
 app.use(errorHandlerMiddleware)
