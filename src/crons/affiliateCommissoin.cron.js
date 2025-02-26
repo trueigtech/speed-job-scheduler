@@ -1,5 +1,5 @@
 import { JOB_AFFILIATE_COMMISSION, affiliateCommissionQueue } from '@src/queues/affiliateCommission.queue'
-const EVERY_MINUTES = '* * * * *';
+const DAILY = '0 0 * * *';
 
 affiliateCommissionQueue.add(
   JOB_AFFILIATE_COMMISSION,
@@ -8,7 +8,7 @@ affiliateCommissionQueue.add(
     jobId: JOB_AFFILIATE_COMMISSION,
     removeOnComplete: 10,
     repeat: {
-      cron: EVERY_MINUTES
+      cron: DAILY
     }
   }
 ).then(() => {
