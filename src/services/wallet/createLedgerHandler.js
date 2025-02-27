@@ -14,13 +14,11 @@ export class CreateLedgerHandlerHandler extends BaseHandler {
     async run() {
         const { transactionId, transactionType, currencyCode, userId, direction, amount } = this.args;
         const transaction = this.dbTransaction // Initialize local transaction
-
         const wallet = await db.Wallet.findOne({
             where: { userId, currencyCode },
             lock: true, // Lock row to prevent race conditions
             transaction,
         })
-
         if (!wallet) {
             throw new AppError(Errors.WALLET_NOT_FOUND);
         }

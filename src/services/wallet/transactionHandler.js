@@ -23,7 +23,6 @@ export class TransactionHandlerHandler extends BaseHandler {
       paymentProviderId: paymentProvider, moreDetails,
       status
     }, { transaction })
-
     const ledger = await CreateLedgerHandlerHandler.execute({
       transactionId: bankingTransaction.transactionId,
       transactionType: LEDGER_TRANSACTION_TYPES.BANKING,
