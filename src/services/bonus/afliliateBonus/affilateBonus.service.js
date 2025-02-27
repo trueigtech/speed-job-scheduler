@@ -13,7 +13,6 @@ export class AffiliateCommissionService extends BaseHandler {
 
             const startDate = new Date();
             startDate.setDate(startDate.getDate() - 7);
-
             const betAmounts = await db.CasinoTransaction.findAll({
                 attributes: [
                     'userId',
@@ -25,11 +24,15 @@ export class AffiliateCommissionService extends BaseHandler {
                         as: 'casinoLedger',
                         attributes: [],
                         required: true,
+                        where: {
+                            transaction_type: 'casino',
+                            currency_code: { [Op.ne]: 'GC' } // sc amount check
+                        },
                         on: {
                             transactionId: sequelize.where(
-                                sequelize.cast(sequelize.col('casinoLedger.transaction_id'), 'TEXT'),
+                                sequelize.col('casinoLedger.transaction_id'),
                                 '=',
-                                sequelize.col('CasinoTransaction.transaction_id')
+                                sequelize.col('CasinoTransaction.id')
                             )
                         }
                     },
@@ -44,7 +47,7 @@ export class AffiliateCommissionService extends BaseHandler {
                 ],
                 where: {
                     created_at: {
-                        [Op.gte]: startDate
+                        [Op.gte]: '2024-02-24 00:00:00+00' // startDate
                     }
                 },
                 group: [
@@ -57,7 +60,6 @@ export class AffiliateCommissionService extends BaseHandler {
 
             for (const record of betAmounts) {
                 const { userId, totalBetAmount, 'User.refParentId': refParentId } = record;
-
                 const transaction = await db.sequelize.transaction();
 
                 try {
@@ -75,7 +77,6 @@ export class AffiliateCommissionService extends BaseHandler {
                     });
 
                     if (!referrer) {
-                        console.log('Referrer user not found');
                         await transaction.rollback();
                         continue;
                     }
