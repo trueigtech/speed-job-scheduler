@@ -47,7 +47,7 @@ export class AffiliateCommissionService extends BaseHandler {
                 ],
                 where: {
                     created_at: {
-                        [Op.gte]: '2024-02-24 00:00:00+00' // startDate
+                        [Op.gte]: startDate
                     }
                 },
                 group: [
