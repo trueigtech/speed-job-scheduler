@@ -15,6 +15,13 @@ export const Errors = {
     code: 1002,
     httpStatusCode: StatusCodes.BAD_REQUEST
   },
+  INVALID_DIRECTION:{
+    name: 'invalid direction',
+    message: 'Request Validation Error',
+    explanation: 'The response data structure does not match the expected schema invalid direction.',
+    code: 1002,
+    httpStatusCode: StatusCodes.BAD_REQUEST
+  },
   BONUS_ALREADY_CLAIMED: {
     name: 'BONUS_ALREADY_CLAIMED',
     message: ' invalid request for bonus claim',
