@@ -40,8 +40,8 @@ export class RackbackService extends BaseHandler {
         SUM(CASE WHEN ct.action_type = 'casino_win' AND tl.currency_code != 'GC' AND tl.transaction_type = 'casino' THEN tl.amount ELSE 0 END) AS total_win_amount
       FROM "users" u
       LEFT JOIN "casino_transactions" ct ON ct."user_id" = u."user_id"
-          AND ct.created_at >= :startDate
-          AND ct.created_at < :endDate
+          AND ct.created_at >= '2024-01-24 00:00:00+00'
+          AND ct.created_at < '2025-02-24 00:00:00+00'
           AND ct.action_type IN ('casino_bet', 'casino_win')
       LEFT JOIN "transaction_ledgers" tl ON tl."transaction_id" = ct."id"
           AND tl.transaction_type = 'casino'
@@ -77,7 +77,6 @@ export class RackbackService extends BaseHandler {
         replacements: { startDate: startDate.toISOString(), endDate: endDate.toISOString() },
         type: db.sequelize.QueryTypes.SELECT
       });
-
       await Promise.all(
         result.map(async (entry) => {
           if (entry.rackback_amount !== null) {
