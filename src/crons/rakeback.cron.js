@@ -5,7 +5,7 @@ rakebackQueue.add(
   {},
   {
     jobId: JOB_RAKEBACK,
-    removeOnComplete: 10,
+    removeOnComplete: 3,
     repeat: {
       cron: EVERY_FRIDAY
     }
