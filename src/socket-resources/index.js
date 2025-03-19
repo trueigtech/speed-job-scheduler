@@ -6,15 +6,17 @@ import { redisPublisher, redisSubscriber } from '../libs/redis'
 import { getLocalizedError, isTrustedError } from '../utils/error.utils'
 import { InternalServerErrorType } from '../utils/errors'
 import argumentsDecoratorSocketMiddleware from './middlewares/argumentsDecoratorSocket.middleware'
-import contextSocketMiddleware from './middlewares/contextSocket.middleware'
 import namespaces from './namespaces'
 
 // TODO: specify the particular origin
 const socketCorsOptions = {
-  cors: { origin: '*' },
+  cors: {
+    origin: '*'
+  },
   path: '/api/socket'
 }
 const socketServer = new SocketServer(socketCorsOptions) // socketCorsOptions
+
 socketServer.on('new_namespace', (namespace) => {
   namespace.use((socket, next) => {
     const req = socket.request
@@ -36,7 +38,6 @@ socketServer.on('new_namespace', (namespace) => {
     })
 
     socket.use(argumentsDecoratorSocketMiddleware(socket))
-    socket.use(contextSocketMiddleware(socket))
 
     next()
   })

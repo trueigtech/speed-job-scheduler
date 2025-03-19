@@ -1,12 +1,12 @@
 import db from '@src/db/models';
 import { serverDayjs } from '@src/libs/dayjs';
 import { BaseHandler } from '@src/libs/logicBase';
-import { TransactionHandlerHandler } from "@src/services/wallet";
-import { COINS, TRANSACTION_PURPOSE } from '@src/utils/constants/public.constants';
+import { TransactionHandlerHandler, TransactionHandlerService } from "@src/services/wallet";
+import { COINS, LEDGER_PURPOSE, TRANSACTION_PURPOSE, WALLET_OWNER_TYPES } from '@src/utils/constants/public.constants';
 
 export class RackbackService extends BaseHandler {
 
-  async run() {
+  async run () {
     try {
       const calculateLastWeekDateRange = () => {
 
@@ -36,18 +36,18 @@ export class RackbackService extends BaseHandler {
     WITH bet_and_win AS (
       SELECT
         u."user_id",
-        SUM(CASE WHEN ct.action_type = 'casino_bet' AND tl.currency_code != 'GC' AND tl.transaction_type = 'casino' THEN tl.amount ELSE 0 END) AS total_bet_amount,
-        SUM(CASE WHEN ct.action_type = 'casino_win' AND tl.currency_code != 'GC' AND tl.transaction_type = 'casino' THEN tl.amount ELSE 0 END) AS total_win_amount
+        SUM(CASE WHEN tl.purpose = 'casino_bet' AND tl.currency_code != 'GC' AND tl.transaction_type = 'casino' THEN tl.amount ELSE 0 END) AS total_bet_amount,
+        SUM(CASE WHEN tl.purpose = 'casino_win' AND tl.currency_code != 'GC' AND tl.transaction_type = 'casino' THEN tl.amount ELSE 0 END) AS total_win_amount
       FROM "users" u
       LEFT JOIN "casino_transactions" ct ON ct."user_id" = u."user_id"
           AND ct.created_at >= :startDate
           AND ct.created_at < :endDate
-          AND ct.action_type IN ('casino_bet', 'casino_win')
-      LEFT JOIN "transaction_ledgers" tl ON tl."transaction_id" = ct."id"
+      LEFT JOIN "ledgers" tl ON tl."transaction_id" = ct."id"
           AND tl.transaction_type = 'casino'
+          AND tl.purpose IN ('casino_bet', 'casino_win')
       GROUP BY u."user_id"
     )
-    
+
     SELECT
       u."user_id",
       ud."vip_tier_id",  -- Directly select the vip_tier_id without aggregation
@@ -69,7 +69,7 @@ export class RackbackService extends BaseHandler {
     GROUP BY u."user_id", ud."vip_tier_id", rt."rackback"  -- Group by user_id, vip_tier_id, and rackback to ensure uniqueness
     HAVING (COALESCE(MAX(baw.total_bet_amount), 0) - COALESCE(MAX(baw.total_win_amount), 0)) > 0
        AND (COALESCE(MAX(baw.total_bet_amount), 0) - COALESCE(MAX(baw.total_win_amount), 0)) * rt."rackback" / 100 > 0;
-    
+
     `
 
 
@@ -77,18 +77,33 @@ export class RackbackService extends BaseHandler {
         replacements: { startDate: startDate.toISOString(), endDate: endDate.toISOString() },
         type: db.sequelize.QueryTypes.SELECT
       });
+      console.log('~~~~~~~~~~', result)
       await Promise.all(
         result.map(async (entry) => {
           if (entry.rackback_amount !== null) {
             const roundedAmount = parseFloat((Number(entry.rackback_amount)).toFixed(2));
 
             // Call the function with the necessary parameters
-            await TransactionHandlerHandler.execute({
-              userId: entry.user_id,
-              amount: roundedAmount,
-              currencyCode: COINS.SWEEP_COIN.BONUS_SWEEP_COIN,
-              purpose: TRANSACTION_PURPOSE.BONUS_RACKBACK
-            }, this.context);
+            // await TransactionHandlerHandler.execute({
+            //   userId: entry.user_id,
+            //   amount: roundedAmount,
+            //   currencyCode: COINS.SWEEP_COIN.BONUS_SWEEP_COIN,
+            //   purpose: TRANSACTION_PURPOSE.BONUS_RACKBACK
+            // }, this.context);
+            await TransactionHandlerService.execute(
+              {
+                actioneeId: 1,
+                actioneeType: WALLET_OWNER_TYPES.ADMIN,
+                fromWalletOwnerId: 1,
+                fromWalletOwnerType: WALLET_OWNER_TYPES.ADMIN,
+                toWalletOwnerId: entry.user_id,
+                toWalletOwnerType: WALLET_OWNER_TYPES.USER,
+                amount: roundedAmount,
+                currencyCode: COINS.SWEEP_COIN.REDEEMABLE_SWEEP_COIN,
+                purpose: LEDGER_PURPOSE.BONUS_RACKBACK,
+              },
+              this.context
+            );
           }
         })
       );

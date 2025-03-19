@@ -20,10 +20,6 @@ module.exports = function (sequelize, DataTypes) {
       type: DataTypes.STRING,
       allowNull: true
     },
-    state: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
     selfExclusion: {
       type: DataTypes.DATE,
       allowNull: true
@@ -34,15 +30,15 @@ module.exports = function (sequelize, DataTypes) {
     },
     referralCode: {
       type: DataTypes.STRING,
-      allowNull: true
+      allowNull: true,
     },
     disableReason: {
       type: DataTypes.STRING,
       allowNull: true
     },
-    vipTierId: {
-      type: DataTypes.INTEGER,
-      allowNull: true
+    vipTierId:{
+      type : DataTypes.INTEGER,
+      allowNull : true
     },
     nextVipTierId: {
       type: DataTypes.INTEGER,
@@ -50,28 +46,28 @@ module.exports = function (sequelize, DataTypes) {
     },
     ipAddress: {
       type: DataTypes.STRING,
-      allowNull: false,
-      defaultValue: '1.1.1.1'
+      allowNull: true,
+      comment: 'user signUp IP'
     },
-    newPasswordKey: {
+    loginIpAddress: {
       type: DataTypes.STRING,
       allowNull: true,
+      comment: 'user login IP'
     },
-    newPasswordRequested: {
+    centryOsApplicationToken:{
+      type: DataTypes.STRING,
+      allowNull : true
+    },
+    centryOsTokenExpiryDate: {
       type: DataTypes.DATE,
-      allowNull: true,
+      allowNull: true
     },
   }, {
     sequelize,
     tableName: 'user_details',
     schema: 'public',
     timestamps: true,
-    underscored: true,
-    indexes: [
-      {
-        fields: ['userId']
-      }
-    ]
+    underscored: true
   })
 
   UserDetails.associate = function (model) {

@@ -7,7 +7,7 @@ import { error } from 'winston'
 
 export default async function authenticationSocketNamespaceMiddleWare(socket, next) {
   try {
-    const accessToken = socket.handshake.headers.accessToken
+    const accessToken = socket.handshake.headers.cookie.split('accessToken=')[1]
     if (!accessToken) {
       next(Errors.INVALID_TOKEN)
     }

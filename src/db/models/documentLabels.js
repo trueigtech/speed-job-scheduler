@@ -24,5 +24,9 @@ module.exports = function (sequelize, DataTypes) {
     underscored: true
   })
 
+  DocumentLabel.associate = function (model) {
+    // super.associate()
+  }
+
   return DocumentLabel
 }

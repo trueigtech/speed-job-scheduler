@@ -1,38 +1,38 @@
-import db from '@src/db/models'
-import { BaseHandler } from '@src/libs/logicBase'
-import { LEDGER_DIRECTIONS, LEDGER_TRANSACTION_TYPES } from '@src/utils/constants/public.constants'
-import { CreateLedgerHandlerHandler } from './createLedgerHandler'
+import db from "@src/db/models";
+import { BaseHandler } from "@src/libs/logicBase";
+import { LEDGER_TRANSACTION_TYPES, WALLET_OWNER_TYPES } from "@src/utils/constants/public.constants";
+import { CreateLedgerHandlerService } from "./createLedgerHandler";
 
-
-export class TransactionHandlerHandler extends BaseHandler {
-  get constraints() {
-    return constraints
-  }
+export class TransactionHandlerService extends BaseHandler {
 
   async run() {
     const {
-      adminId, userId, amount, currencyCode, status, purpose, paymentTransactionId,
-      paymentProvider, moreDetails
+      actioneeId,actioneeType, fromWalletOwnerId, fromWalletOwnerType, toWalletOwnerId, toWalletOwnerType, amount, currencyCode, status, purpose, paymentTransactionId,
+      paymentProvider, moreDetails, transactionType
     } = this.args
     const transaction = this.dbTransaction
 
     const bankingTransaction = await db.Transaction.create({
-      userId,
-      actioneeId: adminId,
-      purpose: purpose,
-      paymentProviderId: paymentProvider, moreDetails,
-      status
+      actioneeId,
+      actioneeType,
+      status,
+      paymentProvider,
+      moreDetails: moreDetails,
     }, { transaction })
-    const ledger = await CreateLedgerHandlerHandler.execute({
+
+    const ledger = await CreateLedgerHandlerService.execute({
       transactionId: bankingTransaction.transactionId,
-      transactionType: LEDGER_TRANSACTION_TYPES.BANKING,
+      transactionType: transactionType || LEDGER_TRANSACTION_TYPES.BANKING,
       currencyCode,
-      userId,
-      direction: LEDGER_DIRECTIONS[purpose],
+      fromWalletOwnerId,
+      fromWalletOwnerType,
+      toWalletOwnerId,
+      toWalletOwnerType,
+      purpose,
       amount
     }, this.context)
 
-    return { transaction: { ...bankingTransaction, ledger } }
+    return { transaction: bankingTransaction, ledger };
+
   }
 }
-

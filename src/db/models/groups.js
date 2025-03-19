@@ -34,7 +34,6 @@ module.exports = function (sequelize, DataTypes) {
 
   Group.associate = function (model) {
     Group.hasMany(model.UserGroup, { foreignKey: 'groupId', onDelete: 'cascade' })
-    Group.hasMany(model.BonusUserGroup, { foreignKey: 'groupId', onDelete: 'cascade' })
   }
 
   return Group

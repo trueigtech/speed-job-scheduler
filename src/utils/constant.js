@@ -1,80 +1,127 @@
-import CryptoJS from 'crypto-js'
 
-import config from '../configs/app.config'
+export const RESPONSIBLE_GAMING_ENDPOINTS = ['user/daily-limit', 'user/loss-limit', 'user/deposit-limit', 'user/disable-until', 'user/session-time']
+
+export const INTERNAL_USER_TAG = 'Internal'
 
 export const ROLE = {
-  USER: 'user',
-  ADMIN: 'admin',
-  MERCHANT: 'merchant',
-  SUPERADMIN: 'superadmin',
-  SYSTEM: 'system'
+  SUPER_ADMIN: 'Super Admin',
+  ADMIN: 'Admin',
+  MANAGER: 'Manager',
+  USER: 'user'
+  // AFFILIATE: 'affiliate',
+  // MERCHANT: 'merchant'
 }
 
-export const TYPE = {
-  CRYPTO: 'CRYPTO',
-  FIAT: 'FIAT',
-  CRYPTO_ID: 0,
-  FIAT_ID: 1
+export const ROLE_ID = {
+  SUPERADMIN: 1,
+  ADMIN: 2,
+  SUPPORT: 3,
+  MANAGER: 3,
 }
 
-export const EMAIL_TEMPLATE_PRIMARY_STATUS = {
-  PRIMARY: 1,
-  DISABLE: 0,
-  alias: {
-    0: 'disable',
-    1: 'primary'
-  }
+export const BREAK_TYPE = {
+  TAKE_A_BREAK: 'TAKE_A_BREAK',
+  SELF_EXCLUSION: 'SELF_EXCLUSION'
 }
 
-// export const TRANSACTION_STATUS = {
-//   PENDING: 0,
-//   SUCCESS: 1,
-//   CANCELLED: 2,
-//   FAILED: 3,
-//   ROLLBACK: 4,
-//   APPROVED: 5,
-//   REJECTED: 6,
-//   EXPIRED: 7
-// }
-export const TRANSACTION_STATUS = {
-  PENDING: 'pending',
-  SUCCESS: 'successful',
-  CANCELLED: 'cancelled',
-  FAILED: 'failed',
-  ROLLBACK: 'rollback',
-  APPROVED: 'approved',
-  REJECTED: 'rejected',
-  REQUESTED: 'requested'
+export const SELF_EXCLUSION_TYPE = {
+  CURRENT: 'current',
+  ALL: 'all'
 }
 
-export const PAYMENT_STATUS = {
-  SUCCESS: 'SUCCESSFUL',
-  FAILED: 'FAILED',
+export const STATUS = {
+  PENDING: 0,
+  APPROVED: 1,
+  REJECTED: 2,
+  CANCELLED: 3,
+  REREQUESTED: 4
+}
+
+export const STATUS_VALUE = {
+  APPROVED: 'APPROVED',
   PENDING: 'PENDING',
-  WAITING_INPUT: 'WAITING_INPUT',
-  WAITING_APPROVAL: 'WAITING_APPROVAL',
-  WAITING_WITHDRAWAL_APPROVAL: 'WAITING_WITHDRAWAL_APPROVAL'
+  REJECTED: 'REJECTED',
+  REQUESTED: 'REQUESTED',
+  RE_REQUESTED: 'RE-REQUESTED'
+}
+
+export const JWT_TOKEN_TYPES = {
+  LOGIN: 'login',
+  FORGOT_PASSWORD: 'forgot_password'
+}
+export const TRANSACTION_STATUS = {
+  PENDING: 0,
+  SUCCESS: 1,
+  CANCELLED: 2,
+  FAILED: 3,
+  ROLLBACK: 4,
+  APPROVED: 5,
+  REJECTED: 6,
+  REQUESTED: 7
+}
+
+export const TRANSACTION_TYPE = {
+  PURCHASE: 'Purchase',
+  REDEEM: 'Redeem',
+  CASINOBET: 'CasinoBet',
+  REFUND: 'CasinoRefund',
+  WIN: 'CasinoWin',
+  BONUS_CASHED: 'BonusCasino',
+  BONUS_DEPOSIT: 'BonusDeposit',
+  DEPOSIT: 'deposit',
+  WITHDRAW: 'withdraw',
+  BONUS: 'bonus',
+  BONUS_REFERRAL: 'BonusReferral',
+  BONUS_TO_CASH: 'BonusToCash',
+  FORFEIT: 'BonusForfeit',
+  ADD_BALANCE: 'AddMoney',
+  DEBIT: 'debit',
+  CREDIT: 'credit',
+  BET: 'bet',
+  WIN: 'win',
+  REFUND: 'refund',
+  ROLLBACK: 'rollback',
+  BONUSWIN: 'bonuswin',
+  JACKPOT: 'jackpotwin',
+  PROMOWIN: 'promowin'
 }
 
 export const PAYMENT_PROVIDER = {
   LIMINAL: 'Liminal',
   NOWPAYMENT: 'NowPayment',
-  OFFLINE: 'Offline'
+  OFFLINE: 'Offline',
+  CENTRY_OS: 'CentryOS'
 }
 
-export const TRANSACTION_STATUS_CASINO = {
-  PENDING: 0,
-  COMPLETED: 1,
-  FAILED: 2,
-  ROLLBACK: 3
+export const GAME_CATEGORY = {
+  TABLE_GAME: 'table',
+  CASINO_GAME: 'casino'
 }
 
-export const MAP_GENDER = {
-  Female: 'f',
-  Male: 'm',
-  F: 'f',
-  M: 'm',
-  Other: 'm'
+export const RESTRICTED_TYPE = {
+  PROVIDERS: 'PROVIDERS',
+  GAMES: 'GAMES'
+}
+
+export const SUBJECT_TYPE = {
+  ACTIVE_USER: 'userActivate',
+  IN_ACTIVE_USER: 'userDeactivate',
+  EMAIL_VERIFICATION: 'verification',
+  RESET_PASSWORD: 'reset',
+  KYC_REJECTED: 'kycRejected',
+  KYC_VERIFIED: 'kycVerified',
+  KYC_REQUESTED: 'kycRequested',
+  // KYC_REMINDER: 'KYC Reminder',
+  // KYC_RECEIVED: 'KYC Received',
+  WITHDRAW_REQUEST_RECEIVED: 'withdraw_request_received',
+  WITHDRAW_APPROVED: 'withdraw_request_approved',
+  WITHDRAW_PROCESSED: 'withdraw_request_processed',
+  DEPOSIT_SUCCESS: 'deposit_success',
+  DEPOSIT_FAILED: 'deposit_failed',
+  // REGISTRATION_WELCOME: 'Registration Welcome',
+  // GAMBLING_STATUS_REGISTRATION: 'Gambling Status Registration',
+  UPDATE_PASSWORD: 'passwordUpdated',
+  JOINING_BONUS: 'joiningBonus'
 }
 
 export const EMAIL_SUBJECTS = {
@@ -92,7 +139,7 @@ export const EMAIL_SUBJECTS = {
     withdraw_request_approved: 'Good News! Your Withdrawal Request is Approved',
     withdraw_request_processed: 'It\'s on Its Way: Your Withdrawal Request is Now Processed',
     passwordUpdated: 'Congrats! Your Password Has Been Updated Successfully',
-    joiningBonus: 'Congrats! You have received Joining Bonus'
+    joiningBonus: 'Congrats! Your Password Has Been Updated Successfully'
   },
   DE: {
     verification: 'Lassen Sie uns anfangen: Bitte überprüfen Sie Ihr Konto',
@@ -108,7 +155,7 @@ export const EMAIL_SUBJECTS = {
     withdraw_request_approved: 'Gute Nachrichten! Ihre Auszahlungsanfrage wurde genehmigt',
     withdraw_request_processed: 'Es ist auf dem Weg: Ihre Auszahlungsanfrage wird jetzt bearbeitet',
     passwordUpdated: 'Herzlichen Glückwunsch! Ihr Passwort wurde erfolgreich aktualisiert',
-    joiningBonus: 'Congrats! You have received Joining Bonus'
+    joiningBonus: 'Congrats! Your Password Has Been Updated Successfully'
   },
   FR: {
     verification: 'Commençons: Veuillez vérifier votre compte',
@@ -124,7 +171,7 @@ export const EMAIL_SUBJECTS = {
     withdraw_request_approved: 'Bonne nouvelle! Votre demande de retrait est approuvée',
     withdraw_request_processed: 'C\'est en route: Votre demande de retrait est maintenant traitée',
     passwordUpdated: 'Félicitations! Votre mot de passe a été mis à jour avec succès',
-    joiningBonus: 'Congrats! You have received Joining Bonus'
+    joiningBonus: 'Congrats! Your Password Has Been Updated Successfully'
   },
   FI: {
     verification: 'Aloitetaan: Vahvista tilisi',
@@ -140,7 +187,7 @@ export const EMAIL_SUBJECTS = {
     withdraw_request_approved: 'Hyviä uutisia! Nostopyyntösi on hyväksytty',
     withdraw_request_processed: 'Se on matkalla: Nostopyyntösi on nyt käsitelty',
     passwordUpdated: 'Onnittelut! Salasanasi on päivitetty onnistuneesti',
-    joiningBonus: 'Congrats! You have received Joining Bonus'
+    joiningBonus: 'Congrats! Your Password Has Been Updated Successfully'
   },
   NO: {
     verification: 'La oss komme i gang: Vennligst bekreft kontoen din',
@@ -156,25 +203,8 @@ export const EMAIL_SUBJECTS = {
     withdraw_request_approved: 'Gode nyheter! Uttaksforespørselen din er godkjent',
     withdraw_request_processed: 'Det er på vei: Uttaksforespørselen din behandles nå',
     passwordUpdated: 'Gratulerer! Passordet ditt er oppdatert',
-    joiningBonus: 'Congrats! You have received Joining Bonus'
+    joiningBonus: 'Congrats! Your Password Has Been Updated Successfully'
   }
-}
-
-export const OK = 'ok'
-export const LIMIT = 10
-export const SUCCESS = 'success'
-export const UPLOAD_FILE_SIZE = 1000000
-export const UPLOAD_DOCUMENT_SIZE = 2000000
-export const LEVEL = 1
-
-export const BONUS_TYPE = {
-  BALANCE: 'balance',
-  FREESPINS: 'freespins',
-  DEPOSIT: 'deposit',
-  JOINING: 'joining',
-  WAGERING: 'wagering',
-  PROMOTION: 'promotion',
-  SPIN_WHEEL: 'spin_wheel'
 }
 
 export const ACTION = {
@@ -183,106 +213,30 @@ export const ACTION = {
   ROLLBACK: 'rollback',
   ROLLBACKBEFOREBETWIN: 'prerollback',
   FREESPINS: 'freespins',
-  BETINTERNAL: 'betInternal',
-  WININTERNAL: 'winInternal'
-}
-
-export const TRANSACTION_TYPE = {
-  DEPOSIT: 'deposit',
-  WITHDRAW: 'withdraw',
-  BONUS: 'bonus',
-  BONUS_TO_CASH: 'bonusToCash',
-  FORFEIT: 'bonusForfeit',
-  EXPIRED: 'bonusExpired',
-  ADD_BALANCE: 'addMoney',
-  REMOVE_BALANCE: 'removeMoney',
-  BONUS_REFERRAL: 'bonusReferral',
   INTERNAL: {
-    deposit: 'depositInternal',
-    withdraw: 'withdrawInternal',
-    reversal: 'reversalInternal',
-    debit: 'debitInternal',
-    credit: 'creditInternal'
-  },
-  REVERSAL: 'reversal',
-  DEBIT: 'debit',
-  CREDIT: 'credit'
+    bet: 'betInternal',
+    win: 'winInternal'
+  }
 }
 
-export const AMOUNT_TYPE = {
-  CASH: 0,
-  NON_CASH: 1,
-  CASH_NON_CASH: 2
+export const ACCOUNT_TYPE = {
+  REAL: 'REAL',
+  INTERNAL: 'INTERNAL'
 }
 
-export const WEB_SOCKET_CODE = {
-  UPDATEWALLET: 'UPDATEWALLET',
-  PAYMENTSTATUS: 'PAYMENTSTATUS'
+export const LIMIT_TIME_PERIOD = {
+  DAILY: 'daily',
+  WEEKLY: 'weekly',
+  MONTHLY: 'monthly'
 }
 
-export const STATUS_VALUE = {
-  APPROVED: 'APPROVED',
-  PENDING: 'PENDING',
-  REJECTED: 'REJECTED',
-  REQUESTED: 'REQUESTED',
-  RE_REQUESTED: 'RE-REQUESTED',
-  COMPLETED: 'COMPLETED'
-}
-
-export const STATUS = {
-  PENDING: 0,
-  APPROVED: 1,
-  REJECTED: 2,
-  CANCELLED: 3,
-  REREQUESTED: 4
-}
-
-export const BONUS_STATUS = {
-  PENDING: 'PENDING',
-  ACTIVE: 'ACTIVE',
-  CANCELLED: 'CANCELLED',
-  FORFEIT: 'FORFEITED',
-  EXPIRED: 'EXPIRED',
-  CLAIMING: 'CLAIMING',
-  IN_PROCESS: 'IN-PROCESS',
-  LAPSED: 'LAPSED'
-}
-
-export const WAGERING_TYPE = {
-  BONUS: 'bonus',
-  BONUSDEPOSIT: 'bonusdeposit'
-}
-
-export const KEYS = {
-  MAX_BONUS_THRESHOLD: 'maxBonusThreshold',
-  MIN_DEPOSIT: 'minDeposit',
-  MAX_WIN_AMOUNT: 'maxWinAmount',
-  ZERO_OUT_THRESHOLD: 'zeroOutThreshold',
-  MIN_BALANCE: 'minBalance',
-  JOINING_AMOUNT: 'joiningAmount'
-}
-
-export const WAGER_STATUS = {
-  PENDING: 'PENDING',
-  STARTED: 'STARTED',
-  COMPLETED: 'COMPLETED',
-  CANCELLED: 'CANCELLED'
-}
-
-export const TIME_PERIOD = {
-  DAILY: 1,
-  WEEKLY: 7,
-  MONTHLY: 30
-}
-
-export const BREAK_TYPE = {
-  TAKE_A_BREAK: 'TAKE_A_BREAK',
-  SELF_EXCLUSION: 'SELF_EXCLUSION'
-}
-
-export const SELF_EXCLUSION_TYPE = {
-  CURRENT: 'current',
-  ALL: 'all'
+export const EMAIL_TEMPLATE_PRIMARY_STATUS = {
+  PRIMARY: 1,
+  DISABLE: 0,
+  alias: {
+    0: 'disable',
+    1: 'primary'
+  }
 }
 
 export const EMAIL_TEMPLATE_TYPES = {
@@ -293,18 +247,17 @@ export const EMAIL_TEMPLATE_TYPES = {
   KYC_REJECTED: 'KYC Rejected',
   KYC_VERIFIED: 'KYC Verified',
   KYC_REQUESTED: 'KYC Requested',
-  KYC_REMINDER: 'KYC Reminder',
+  // KYC_REMINDER: 'KYC Reminder',
   KYC_RECEIVED: 'KYC Received',
-  WITHDRAW_REQUEST_RECEIVED: 'Withdraw Request Received',
-  WITHDRAW_APPROVED: 'Withdraw Approved',
+  // WITHDRAW_REQUEST_RECEIVED: 'Withdraw Request Received',
+  // WITHDRAW_APPROVED: 'Withdraw Approved',
   WITHDRAW_PROCESSED: 'Withdraw Processed',
   DEPOSIT_SUCCESS: 'Deposit Success',
   DEPOSIT_FAILED: 'Deposit Failed',
   REGISTRATION_WELCOME: 'Registration Welcome',
-  GAMBLING_STATUS_REGISTRATION: 'Gambling Status Registration',
+  // GAMBLING_STATUS_REGISTRATION: 'Gambling Status Registration',
   UPDATE_PASSWORD: 'Password Updated',
   JOINING_BONUS: 'Joining Bonus',
-  OTP_VERIFICATION: 'Please verify your email by entering the given OTP',
   VALUE_T0_INT: {
     'Active User': 0,
     'In-Active User': 1,
@@ -313,15 +266,15 @@ export const EMAIL_TEMPLATE_TYPES = {
     'KYC Rejected': 4,
     'KYC Verified': 5,
     'KYC Requested': 6,
-    'KYC Reminder': 7,
+    // 'KYC Reminder': 7,
     'KYC Received': 8,
-    'Withdraw Request Received': 10,
-    'Withdraw Approved': 11,
+    // 'Withdraw Request Received': 10,
+    // 'Withdraw Approved': 11,
     'Withdraw Processed': 12,
     'Deposit Success': 13,
     'Deposit Failed': 14,
     'Registration Welcome': 15,
-    'Gambling Status Registration': 16,
+    // 'Gambling Status Registration': 16,
     'Password Updated': 17,
     'Joining Bonus': 18
   },
@@ -333,36 +286,247 @@ export const EMAIL_TEMPLATE_TYPES = {
     4: 'KYC Rejected',
     5: 'KYC Verified',
     6: 'KYC Requested',
-    7: 'KYC Reminder',
+    // 7: 'KYC Reminder',
     8: 'KYC Received',
-    10: 'Withdraw Request Received',
-    11: 'Withdraw Approved',
+    // 10: 'Withdraw Request Received',
+    // 11: 'Withdraw Approved',
     12: 'Withdraw Processed',
     13: 'Deposit Success',
     14: 'Deposit Failed',
     15: 'Registration Welcome',
-    16: 'Gambling Status Registration',
+    // 16: 'Gambling Status Registration',
     17: 'Password Updated',
     18: 'Joining Bonus'
   }
 }
 
-export const LIMIT_TIME_PERIOD = {
-  DAILY: 'daily',
-  WEEKLY: 'weekly',
-  MONTHLY: 'monthly'
-}
+export const EMAIL_TEMPLATE_ORDER = [
+  'Active User',
+  'In-Active User',
+  'Email Verification',
+  'Reset Password',
+  'KYC Rejected',
+  'KYC Verified',
+  'KYC Requested',
+  // 'KYC Reminder',
+  'KYC Received',
+  // 'Withdraw Request Received',
+  // 'Withdraw Approved',
+  'Withdraw Processed',
+  'Deposit Success',
+  'Deposit Failed',
+  'Registration Welcome',
+  // 'Gambling Status Registration',
+  'Password Updated',
+  'Joining Bonus'
+]
 
-export const ACCOUNT_TYPE = {
-  REAL: 'REAL',
-  INTERNAL: 'INTERNAL'
-}
-
-export const CMS_ALLOWED_KEYS = [
+export const EMAIL_ALLOWED_KEYS = [
   'siteName',
   'siteLogo',
-  'supportEmailAddress'
+  'subject',
+  'userName',
+  'walletAmountTotal',
+  'walletAmountBonus',
+  'walletAmountReal',
+  'siteUrl',
+  'reason',
+  'link',
+  'withdrawAmount',
+  'depositAmount',
+  'transactionId',
+  'playerEmail',
+  'playerFullName',
+  'playerFirstName',
+  'playerLastName',
+  'supportEmailAddress',
+  'kycLabels',
+  'siteLoginUrl',
+  'playerCurrencySymbol',
+  'sendSupportRequestRoute',
+  'newPassword',
+  'joiningAmount'
 ]
+
+export const EMAIL_TEMPLATES_KEYS = {
+  0: {
+    required: ['siteName', 'siteUrl'],
+    optional: ['userName', 'walletAmountTotal', 'siteLogo', 'walletAmountBonus', 'walletAmountReal']
+  },
+  1: {
+    required: ['siteName', 'siteUrl', 'reason'],
+    optional: ['userName', 'walletAmountTotal', 'siteLogo', 'walletAmountBonus', 'walletAmountReal']
+  },
+  2: {
+    required: ['link', 'siteName'],
+    optional: ['siteUrl', 'siteLogo', 'walletAmountTotal', 'walletAmountBonus', 'walletAmountReal', 'playerFullName', 'playerFirstName', 'playerLastName', 'supportEmailAddress', 'userName', 'playerEmail']
+  },
+  3: {
+    required: ['link', 'siteName'],
+    optional: ['siteLogo', 'userName', 'walletAmountTotal', 'walletAmountBonus', 'walletAmountReal', 'siteUrl', 'playerEmail', 'playerFullName', 'playerFirstName', 'playerLastName', 'supportEmailAddress', 'siteLoginUrl', 'playerCurrencySymbol']
+  },
+  4: {
+    required: ['reason', 'siteName'],
+    optional: ['kycLabels', 'siteLogo', 'userName', 'walletAmountTotal', 'walletAmountBonus', 'walletAmountReal', 'siteUrl', 'playerEmail', 'playerFullName', 'playerFirstName', 'playerLastName', 'supportEmailAddress', 'siteLoginUrl', 'playerCurrencySymbol', 'sendSupportRequestRoute']
+  },
+  5: {
+    required: ['playerFullName', 'siteName'],
+    optional: ['siteLogo', 'userName', 'walletAmountTotal', 'walletAmountBonus', 'walletAmountReal', 'siteUrl', 'playerEmail', 'playerFirstName', 'playerLastName', 'supportEmailAddress', 'siteLoginUrl', 'playerCurrencySymbol', 'sendSupportRequestRoute']
+  },
+  6: {
+    required: ['kycLabels'],
+    optional: ['siteName', 'siteLogo', 'userName', 'walletAmountTotal', 'walletAmountBonus', 'walletAmountReal', 'siteUrl', 'playerEmail', 'playerFullName', 'playerFirstName', 'playerLastName', 'supportEmailAddress', 'siteLoginUrl', 'playerCurrencySymbol', 'sendSupportRequestRoute']
+  },
+  7: {
+    required: [],
+    optional: ['siteName', 'siteLogo', 'userName', 'walletAmountTotal', 'walletAmountBonus', 'walletAmountReal', 'siteUrl', 'playerEmail', 'playerFullName', 'playerFirstName', 'playerLastName', 'supportEmailAddress', 'siteLoginUrl', 'playerCurrencySymbol', 'sendSupportRequestRoute']
+  },
+  8: {
+    required: [],
+    optional: ['siteName', 'siteLogo', 'userName', 'walletAmountTotal', 'walletAmountBonus', 'walletAmountReal', 'siteUrl', 'playerEmail', 'playerFullName', 'playerFirstName', 'playerLastName', 'supportEmailAddress', 'siteLoginUrl', 'playerCurrencySymbol', 'sendSupportRequestRoute']
+  },
+  10: {
+    required: ['withdrawAmount', 'playerCurrencySymbol'],
+    optional: ['siteName', 'siteLogo', 'userName', 'walletAmountTotal', 'walletAmountBonus', 'walletAmountReal', 'siteUrl', 'playerEmail', 'playerFullName', 'playerFirstName', 'playerLastName', 'supportEmailAddress', 'siteLoginUrl', 'playerCurrencySymbol', 'sendSupportRequestRoute']
+  },
+  11: {
+    required: ['withdrawAmount', 'playerCurrencySymbol'],
+    optional: ['siteName', 'siteLogo', 'userName', 'walletAmountTotal', 'walletAmountBonus', 'walletAmountReal', 'siteUrl', 'playerEmail', 'playerFullName', 'playerFirstName', 'playerLastName', 'supportEmailAddress', 'siteLoginUrl', 'playerCurrencySymbol', 'sendSupportRequestRoute']
+  },
+  12: {
+    required: ['withdrawAmount', 'playerCurrencySymbol', 'transactionId'],
+    optional: ['siteName', 'siteLogo', 'userName', 'walletAmountTotal', 'walletAmountBonus', 'walletAmountReal', 'siteUrl', 'playerEmail', 'playerFullName', 'playerFirstName', 'playerLastName', 'supportEmailAddress', 'siteLoginUrl', 'playerCurrencySymbol', 'sendSupportRequestRoute']
+  },
+  13: {
+    required: ['transactionId', 'playerCurrencySymbol', 'depositAmount'],
+    optional: ['siteName', 'siteLogo', 'userName', 'walletAmountTotal', 'walletAmountBonus', 'walletAmountReal', 'siteUrl', 'playerEmail', 'playerFullName', 'playerFirstName', 'playerLastName', 'supportEmailAddress', 'siteLoginUrl', 'sendSupportRequestRoute', 'playerCurrencySymbol']
+  },
+  14: {
+    required: ['transactionId', 'subject', 'playerCurrencySymbol', 'depositAmount'],
+    optional: ['siteName', 'siteLogo', 'userName', 'walletAmountTotal', 'walletAmountBonus', 'walletAmountReal', 'siteUrl', 'playerEmail', 'playerFullName', 'playerFirstName', 'playerLastName', 'supportEmailAddress', 'siteLoginUrl', 'playerCurrencySymbol', 'sendSupportRequestRoute']
+  },
+  15: {
+    required: ['playerFullName', 'siteLoginUrl', 'userName'],
+    optional: ['siteName', 'siteLogo', 'walletAmountTotal', 'walletAmountBonus', 'walletAmountReal', 'siteUrl', 'playerEmail', 'playerFullName', 'playerFirstName', 'playerLastName', 'supportEmailAddress', 'siteLoginUrl', 'playerCurrencySymbol', 'sendSupportRequestRoute']
+  },
+  16: {
+    required: ['supportEmailAddress', 'sendSupportRequestRoute'],
+    optional: ['siteName', 'siteLogo', 'userName', 'walletAmountTotal', 'walletAmountBonus', 'walletAmountReal', 'siteUrl', 'playerEmail', 'playerFullName', 'playerFirstName', 'playerLastName', 'siteLoginUrl', 'playerCurrencySymbol']
+  },
+  17: {
+    required: ['playerEmail', 'newPassword', 'siteLoginUrl'],
+    optional: ['siteName', 'siteLogo', 'userName', 'siteUrl', 'playerFullName', 'playerFirstName', 'playerLastName']
+  },
+  18: {
+    required: ['userName', 'joiningAmount', 'siteName'],
+    optional: ['siteName', 'siteLogo', 'userName', 'siteUrl', 'playerFullName', 'playerFirstName', 'playerLastName']
+  }
+}
+
+export const EMAIL_DYNAMIC_OPTIONS = [
+  {
+    key: 'siteName',
+    description: 'This will be replaced by Site name'
+  },
+  {
+    key: 'siteLogo',
+    description: 'This will be replaced by Site\'s Logo URL'
+  },
+  {
+    key: 'subject',
+    description: 'If not given, default subject line will be used'
+  },
+  {
+    key: 'userName',
+    description: 'This will be replaced by User\'s unique username'
+  },
+  {
+    key: 'walletAmountTotal',
+    description: 'This will be replaced by User\'s total wallet amount'
+  },
+  {
+    key: 'walletAmountBonus',
+    description: 'This will be replaced by User\'s non-cash wallet amount'
+  },
+  {
+    key: 'walletAmountReal',
+    description: 'This will be replaced by User\'s cash wallet amount'
+  },
+  {
+    key: 'siteUrl',
+    description: 'This will be replaced by site\'s URL'
+  },
+  {
+    key: 'reason',
+    description: 'This will be replaced by valid reason for triggering email'
+  },
+  {
+    key: 'link',
+    description: 'Dynamically generated link from backend (Reset Password, Email Confirmation)'
+  },
+  {
+    key: 'withdrawAmount',
+    description: 'This will be replaced by withdraw request amount'
+  },
+  {
+    key: 'depositAmount',
+    description: 'This will be replaced by deposit amount'
+  },
+  {
+    key: 'transactionId',
+    description: 'This will be replaced by transaction Id for (Deposit / Withdraw)'
+  },
+  {
+    key: 'playerEmail',
+    description: 'This will be replaced by player\'s email address'
+  },
+  {
+    key: 'playerFullName',
+    description: 'This will be replaced by player\'s full name (first name + last name)'
+  },
+  {
+    key: 'playerFirstName',
+    description: 'This will be replaced by player\'s first name'
+  },
+  {
+    key: 'playerLastName',
+    description: 'This will be replaced by player\'s last name'
+  },
+  {
+    key: 'supportEmailAddress',
+    description: 'This will be replaced by support email address'
+  },
+  {
+    key: 'kycLabels',
+    description: 'This will be replaced by kyc label for pending, approved, rejected'
+  },
+  {
+    key: 'siteLoginUrl',
+    description: 'This will be replaced by user login route'
+  },
+  {
+    key: 'playerCurrencySymbol',
+    description: 'This will be replaced by user\'s currency symbol'
+  },
+  {
+    key: 'sendSupportRequestRoute',
+    description: 'This will be replaced by route for compose support email page.'
+  },
+  {
+    key: 'newPassword',
+    description: 'This will be replaced by updated password'
+  },
+  {
+    key: 'currentYear',
+    description: 'This will be replaced by current year (yyyy)'
+  },
+  {
+    key: 'joiningAmount',
+    description: 'This will be replaced by joining Amount in joining Bonus template.'
+  }
+]
+
+export const CMS_ALLOWED_KEYS = ['siteName', 'siteLogo', 'supportEmailAddress', 'siteUrl']
 
 export const CMS_DYNAMIC_OPTIONS = [
   {
@@ -371,7 +535,7 @@ export const CMS_DYNAMIC_OPTIONS = [
   },
   {
     key: 'siteLogo',
-    description: "This will be replaced by Site's Logo URL"
+    description: 'This will be replaced by Site\'s Logo URL'
   },
   {
     key: 'supportEmailAddress',
@@ -383,155 +547,271 @@ export const CMS_DYNAMIC_OPTIONS = [
   }
 ]
 
-export const DEFAULT_LANGUAGE = 'EN'
-
-export const COUNTRY_CODE_MAPPER = { AF: 'AFG', AL: 'ALB', DZ: 'DZA', AS: 'ASM', AD: 'AND', AO: 'AGO', AI: 'AIA', AQ: 'ATA', AG: 'ATG', AR: 'ARG', AM: 'ARM', AW: 'ABW', AU: 'AUS', AT: 'AUT', AZ: 'AZE', BS: 'BHS', BH: 'BHR', BD: 'BGD', BB: 'BRB', BY: 'BLR', BE: 'BEL', BZ: 'BLZ', BJ: 'BEN', BM: 'BMU', BT: 'BTN', BO: 'BOL', BQ: 'BES', BA: 'BIH', BW: 'BWA', BV: 'BVT', BR: 'BRA', IO: 'IOT', BN: 'BRN', BG: 'BGR', BF: 'BFA', BI: 'BDI', CV: 'CPV', KH: 'KHM', CM: 'CMR', CA: 'CAN', KY: 'CYM', CF: 'CAF', TD: 'TCD', CL: 'CHL', CN: 'CHN', CX: 'CXR', CC: 'CCK', CO: 'COL', KM: 'COM', CD: 'COD', CG: 'COG', CK: 'COK', CR: 'CRI', HR: 'HRV', CU: 'CUB', CW: 'CUW', CY: 'CYP', CZ: 'CZE', CI: 'CIV', DK: 'DNK', DJ: 'DJI', DM: 'DMA', DO: 'DOM', EC: 'ECU', EG: 'EGY', SV: 'SLV', GQ: 'GNQ', ER: 'ERI', EE: 'EST', SZ: 'SWZ', ET: 'ETH', FK: 'FLK', FO: 'FRO', FJ: 'FJI', FI: 'FIN', FR: 'FRA', GF: 'GUF', PF: 'PYF', TF: 'ATF', GA: 'GAB', GM: 'GMB', GE: 'GEO', DE: 'DEU', GH: 'GHA', GI: 'GIB', GR: 'GRC', GL: 'GRL', GD: 'GRD', GP: 'GLP', GU: 'GUM', GT: 'GTM', GG: 'GGY', GN: 'GIN', GW: 'GNB', GY: 'GUY', HT: 'HTI', HM: 'HMD', VA: 'VAT', HN: 'HND', HK: 'HKG', HU: 'HUN', IS: 'ISL', IN: 'IND', ID: 'IDN', IR: 'IRN', IQ: 'IRQ', IE: 'IRL', IM: 'IMN', IL: 'ISR', IT: 'ITA', JM: 'JAM', JP: 'JPN', JE: 'JEY', JO: 'JOR', KZ: 'KAZ', KE: 'KEN', KI: 'KIR', KP: 'PRK', KR: 'KOR', KW: 'KWT', KG: 'KGZ', LA: 'LAO', LV: 'LVA', LB: 'LBN', LS: 'LSO', LR: 'LBR', LY: 'LBY', LI: 'LIE', LT: 'LTU', LU: 'LUX', MO: 'MAC', MG: 'MDG', MW: 'MWI', MY: 'MYS', MV: 'MDV', ML: 'MLI', MT: 'MLT', MH: 'MHL', MQ: 'MTQ', MR: 'MRT', MU: 'MUS', YT: 'MYT', MX: 'MEX', FM: 'FSM', MD: 'MDA', MC: 'MCO', MN: 'MNG', ME: 'MNE', MS: 'MSR', MA: 'MAR', MZ: 'MOZ', MM: 'MMR', NA: 'NAM', NR: 'NRU', NP: 'NPL', NL: 'NLD', NC: 'NCL', NZ: 'NZL', NI: 'NIC', NE: 'NER', NG: 'NGA', NU: 'NIU', NF: 'NFK', MP: 'MNP', NO: 'NOR', OM: 'OMN', PK: 'PAK', PW: 'PLW', PS: 'PSE', PA: 'PAN', PG: 'PNG', PY: 'PRY', PE: 'PER', PH: 'PHL', PN: 'PCN', PL: 'POL', PT: 'PRT', PR: 'PRI', QA: 'QAT', MK: 'MKD', RO: 'ROU', RU: 'RUS', RW: 'RWA', RE: 'REU', BL: 'BLM', SH: 'SHN', KN: 'KNA', LC: 'LCA', MF: 'MAF', PM: 'SPM', VC: 'VCT', WS: 'WSM', SM: 'SMR', ST: 'STP', SA: 'SAU', SN: 'SEN', RS: 'SRB', SC: 'SYC', SL: 'SLE', SG: 'SGP', SX: 'SXM', SK: 'SVK', SI: 'SVN', SB: 'SLB', SO: 'SOM', ZA: 'ZAF', GS: 'SGS', SS: 'SSD', ES: 'ESP', LK: 'LKA', SD: 'SDN', SR: 'SUR', SJ: 'SJM', SE: 'SWE', CH: 'CHE', SY: 'SYR', TW: 'TWN', TJ: 'TJK', TZ: 'TZA', TH: 'THA', TL: 'TLS', TG: 'TGO', TK: 'TKL', TO: 'TON', TT: 'TTO', TN: 'TUN', TR: 'TUR', TM: 'TKM', TC: 'TCA', TV: 'TUV', UG: 'UGA', UA: 'UKR', AE: 'ARE', GB: 'GBR', UM: 'UMI', US: 'USA', UY: 'URY', UZ: 'UZB', VU: 'VUT', VE: 'VEN', VN: 'VNM', VG: 'VGB', VI: 'VIR', WF: 'WLF', EH: 'ESH', YE: 'YEM', ZM: 'ZMB', ZW: 'ZWE', AX: 'ALA' }
-
-export const PAYMENT_CATEGORY = {
-  CREDITCARD: 'CREDITCARD',
-  WALLET: 'WALLET',
-  CRYPTO: 'CRYPTO',
-  OTHER: 'OTHER',
-  INSTANTBANKING: 'INSTANTBANKING'
+export const MAP_AGGREGATOR = {
+  softswiss: 'swissSoft',
+  amantic: 'amantic'
 }
 
-export const TRANSACTION_MESSAGE = {
-  EN: 'We have successfully received your deposit request, which is currently being processed by our provider. If the deposit request is approved and processed successfully, the deposited amount should be available in your account within approximately 15 minutes.',
-  DE: 'Wir haben Ihre Einzahlungsanforderung erfolgreich erhalten, die derzeit von unserem Anbieter verarbeitet wird. Wenn die Einzahlungsanforderung erfolgreich genehmigt und verarbeitet wird, sollte der eingezahlte Betrag innerhalb von etwa 15 Minuten auf Ihrem Konto verfügbar sein.',
-  FR: 'Nous avons bien reçu votre demande de dépôt, qui est actuellement en cours de traitement par notre fournisseur. Si la demande de dépôt est approuvée et traitée avec succès, le montant déposé devrait être disponible sur votre compte dans environ 15 minutes.',
-  FI: 'Olemme vastaanottaneet talletuspyyntösi onnistuneesti, ja se on parhaillaan palveluntarjoajamme käsittelyssä. Jos talletuspyyntö hyväksytään ja se käsitellään onnistuneesti, talletettu summa pitäisi olla saatavilla tililläsi noin 15 minuutin kuluessa.',
-  NO: 'Vi har mottatt innskuddsforspørselen din, som for øyeblikket behandles av vår leverandør. Hvis innskuddsforspørselen blir godkjent og behandlet vellykket, bør det innskudde beløpet være tilgjengelig på kontoen din innen omtrent 15 minutter.'
+export const BANNER_KEYS = ['homeBanner', 'homeBackground', 'loyaltyBanner', 'loyaltyBackground', 'promotionsBanner', 'promotionsBackground', 'casinoBanner', 'casinoBackground', 'cashbackBanner', 'cashbackBackground', 'loginBanner']
+
+export const LANGUAGE_SUPPORT_KEYS = {
+  HOME: [
+    'homeBannerDesc',
+    'homeBannerJoinNow',
+    'homeBannerTnc',
+    'loginHomeBannerBtn',
+    'homeRealPlayerSec',
+    'homeCurrentWinners',
+    'homeTopWinners',
+    'homeTopGames',
+    'homeAbout',
+    'homeAboutContent',
+    'homeTestimonial'
+  ],
+  FOOTER: [
+    'footerAboutSite',
+    'footerRightsReserved',
+    'footerCategory',
+    'footerSupport',
+    'footerOther',
+    'footerImageOne',
+    'footerImageTwo',
+    'footerImageThree'
+  ],
+  CASINO: [
+    'casinoBannerDesc',
+    'casinoBannerJoinNow',
+    'casinoBannerTnc',
+    'casinoFavorite',
+    'casinoNoFavGamesFound',
+    'casinoNoGamesFound',
+    'casinoGameViewAllBtn',
+    'casinoSearch',
+    'casinoMoreGames',
+    'casinoProviders'
+  ],
+  HEADER: [
+    'headerHome',
+    'headerPromotions',
+    'headerLoyalty',
+    'headerSearch',
+    'headerRealMoney',
+    'headerCasinoBonus',
+    'headerLevel',
+    'headerDeposit',
+    'headerAccAndInfo',
+    'headerAccVerify',
+    'headerBonus',
+    'headerLimits',
+    'headerDepositFunds',
+    'headerWithdrawFunds',
+    'headerTransactionHistory',
+    'headerSelectYourLang',
+    'headerBetHistory',
+    'headerLogout',
+    'headerCashback'
+  ],
+  LOYALTY: [
+    'loyaltyBannerBtn',
+    'loginLoyaltyBannerBtn',
+    'loyaltyBannerHeading',
+    'loyaltyBannerDesc',
+    'loyaltyHeadingOne',
+    'loyaltyHeadingOneDesc',
+    'loyaltySubHeadOne',
+    'loyaltySubHeadOneDesc',
+    'loyaltySubHeadTwo',
+    'loyaltySubHeadTwoDesc',
+    'loyaltySubHeadThree',
+    'loyaltySubHeadThreeDesc',
+    'loyaltyTableHeading',
+    'loyaltyTableHeaderOne',
+    'loyaltyTableHeaderTwo',
+    'loyaltyTableHeaderThree',
+    'loyaltyTableHeaderFour',
+    'loyaltyTableHeaderFive',
+    'loyaltyTableHeaderSix',
+    'loyaltyTableHeaderSeven',
+    'loyaltyTableDesc',
+    'loyaltyHeadingTwo',
+    'loyaltyHeadingTwoDesc',
+    'loyaltyHeadingThree',
+    'loyaltyHeadingThreeDesc',
+    'loyaltySubHeadFour',
+    'loyaltySubHeadFourDesc',
+    'loyaltySubHeadFive',
+    'loyaltySubHeadFiveDesc',
+    'loyaltySubHeadSix',
+    'loyaltySubHeadSixDesc',
+    'loyaltySubHeadSeven',
+    'loyaltySubHeadSevenDesc',
+    'loyaltySubHeadEight',
+    'loyaltySubHeadEightDesc',
+    'loyaltySubHeadNine',
+    'loyaltySubHeadNineDesc',
+    'loyaltySubHeadTen',
+    'loyaltySubHeadTenDesc',
+    'loyaltySubHeadEleven',
+    'loyaltySubHeadElevenDesc',
+    'loyaltyTestimonialHeadOne',
+    'loyaltyTestimonialHeadTwo',
+    'loyaltyTestimonialDesc',
+    'loyaltyHeadingFour',
+    'loyaltyPoints',
+    'loyaltyCashback',
+    'loyaltyLevel'
+  ],
+  PROMOTION: [
+    'promBannerDesc',
+    'promClaimNow',
+    'loginPromBannerBtn',
+    'promReadMore',
+    'promFreespinGames',
+    'promTermsAndConditions'
+  ],
+  LOGIN: [
+    'loginKey',
+    'loginToYourAccount',
+    'loginUsername',
+    'loginEmail',
+    'loginEnter',
+    'loginYour',
+    'loginPassword',
+    'loginForget',
+    'loginDoNotHaveAccount',
+    'loginSignUp',
+    'accountsInfoFirstTab',
+    'accountsInfoFourthTab'
+  ],
+  SINGUP: [
+    'signupGetAnAmazing',
+    'signupBannerDesc',
+    'signupStartWithEmail',
+    'signupLoginDetails',
+    'signupEmailAddress',
+    'signupUserName',
+    'signupConfirm',
+    'signupPrivacyPolicy',
+    'signupTermAndConditions',
+    'signupSms',
+    'signupNewsLetter',
+    'signupNextStep',
+    'signupHaveAccount',
+    'signupSignIn',
+    'signupPersonalDetails',
+    'signupFirstName',
+    'signupDob',
+    'signupAddress',
+    'signupPhoneNo',
+    'signupCity',
+    'signupPostcode',
+    'signupCounty',
+    'signupCurrency',
+    'signupGender',
+    'signupMan',
+    'signupWomen',
+    'signupOther',
+    'signupBack',
+    'signupCreateAnAccount',
+    'signupLastName',
+    'signupChange'
+  ],
+  CASHBACK: [
+    'cashbackBannerBtn',
+    'loginCashbackBannerBtn',
+    'cashbackBannerHeading',
+    'cashbackBannerDesc',
+    'cashbackHeadingOne',
+    'cashbackHeadingOneDesc',
+    'cashbackHeadingTwo',
+    'cashbackHeadingTwoDesc',
+    'cashbackHeadingThree',
+    'cashbackHeadingThreeDesc',
+    'cashbackHeadingFour',
+    'cashbackHeadingFourDesc',
+    'cashbackTestimonialHeading',
+    'cashbackTestimonialDesc',
+    'cashbackTableDesc',
+    'cashbackTableHeading',
+    'cashbackFooterDesc',
+    'cashbackTableHeaderOne',
+    'cashbackTableHeaderTwo',
+    'cashbackTableHeaderThree',
+    'cashbackTableHeaderFour'
+  ],
+  OTHER: [
+    'sidebarCmsOne',
+    'sidebarCmsTwo',
+    'completePayment',
+    'kycProtocolDetails',
+    'bonusForfeited',
+    'bonusZeroedOut',
+    'bonusExpired',
+    'bonusBalanceDone',
+    'completedWagering'
+  ]
 }
 
-export const AMOUNT_DEPOSITED = {
-  EN: 'Deposit Amount Attempted',
-  DE: 'Versuchter Einzahlungsbetrag',
-  FR: 'Montant de dépôt tenté',
-  FI: 'Yritetty talletussumma',
-  NO: 'Forsøkt innskuddsbeløp'
+export const SOCKET_NAMESPACES = {
+  WALLET: '/wallet',
+  LEADER_BOARD: '/leader-board',
+  ACCOUNT_CAPTURE: '/accountCapture'
 }
 
-export const RECEIPT_MESSAGES = {
-  transactionId: {
-    EN: 'Transaction Id',
-    DE: 'Transaktions-ID',
-    FR: 'Identifiant de transaction',
-    FI: 'Tapahtumatunnus',
-    NO: 'Transaksjons-ID'
-  },
-  account: {
-    EN: 'Account',
-    DE: 'Konto',
-    FR: 'Compte',
-    FI: 'Tili',
-    NO: 'Konto'
-  },
-  paymentReference: {
-    EN: 'Payment Reference',
-    DE: 'Zahlungsreferenz',
-    FR: 'Référence de paiement',
-    FI: 'Maksuviite',
-    NO: 'Betalingsreferanse'
-  },
-  amountWithdrawn: {
-    EN: 'Amount Withdrawn from player account',
-    DE: 'Abgehobener Betrag vom Spielerkonto',
-    FR: 'Montant retiré du compte du joueur',
-    FI: 'Pelaajatililtä nostettu määrä',
-    NO: 'Beløp trukket fra spillerkonto'
-  },
-  withdrawFee: {
-    EN: 'Withdrawal Fee',
-    DE: 'Abhebungsgebühr',
-    FR: 'Frais de retrait',
-    FI: 'Nostopalkkio',
-    NO: 'Uttaksgebyr'
-  },
-  amountToBeDeposit: {
-    EN: 'Amount That Will be deposited to your account',
-    DE: 'Betrag, der auf Ihr Konto eingezahlt wird',
-    FR: 'Montant qui sera déposé sur votre compte',
-    FI: 'Summa, joka talletetaan tilillesi',
-    NO: 'Beløp som vil bli satt inn på kontoen din'
-  },
-  withdrawId: {
-    EN: 'Withdrawal Transaction Id',
-    DE: 'Auszahlungs-Transaktions-ID',
-    FR: 'Identifiant de transaction de retrait',
-    FI: 'Nostotapahtuman tunnus',
-    NO: 'Uttakstransaksjons-ID'
-  },
-  pspAccount: {
-    EN: 'PSP Account',
-    DE: 'PSP-Konto',
-    FR: 'Compte PSP',
-    FI: 'PSP-tili',
-    NO: 'PSP-konto'
-  }
+export const SOCKET_EMITTERS = {
+  USER_WALLET_BALANCE: 'USER_WALLET_BALANCE',
+  LEADER_BOARD: 'LEADER_BOARD',
+  ACCOUNT_CAPTURE: 'ACCOUNT_CAPTURE',
+  USER_TRANSACTION: 'USER_USER_TRANSACTION'
 }
 
+export const SOCKET_LISTENERS = {
+  USER_WALLET_BALANCE: SOCKET_NAMESPACES.WALLET + '/balance'
 
-export const NUTECH_API_HEADER = {
-  Accept: 'application/json',
-  'Content-Type': 'application/json'
 }
 
-export const BRAND_NAME = 'gamma'
-export const NA = 'not_available'
-
-export const SIGN_IN_TYPE = {
-  NORMAL: 'Normal',
-  GOOGLE: 'Google',
-  FACEBOOK: 'Facebook',
-  LINE: 'Line',
-  TWITCH: 'Twitch',
-  OTHER: 'Other'
+export const SOCKET_ROOMS = {
+  LEADER_BOARD: 'LEADER_BOARD',
+  USER_WALLET: 'USER_WALLET',
+  ACCOUNT_CAPTURE: 'ACCOUNT_CAPTURE'
 }
 
-export const AFFLIATE_REQUEST_TYPE = {
-  PENDING: 'PENDING',
-  APPROVED: 'APPROVED',
-  REJECTED: 'REJECTED',
-  REREQUESTED: 'REREQUESTED'
+export const PROMOTIONS_TYPE = {
+  CASINO_PROMOTIONS: 1,
+  SPONSORSHIPS: 2
 }
-
-export const PRAGMATIC_PLAY = {
-  GAME_AGGREGATOR: 'Pragmatic Play',
-  GAME_PROVIDER: 'Pragmatic Play',
-  CATERGORY: 'Casino',
-  SUB_CATEGORY: {
-    CLASSIC_SLOTS: 'Classic Slots',
-    VIDEO_SLOTS: 'Video Slots',
-    LIVE_GAMES: 'Live games',
-    BACCARAT: 'Baccarat',
-    BACCARAT_NEW: 'Baccarat New',
-    ROULETTE: 'Roulette',
-    SCRACH_CARD: 'Scratch card'
-  }
-}
-
-export const EVOLUTION = {
-  GAME_AGGREGATOR: 'Evolution',
-  GAME_PROVIDER: 'Evolution',
-  CATERGORY: 'Casino'
-  // SUB_CATEGORY: {
-  //   CLASSIC_SLOTS: 'Classic Slots',
-  //   VIDEO_SLOTS: 'Video Slots',
-  //   LIVE_GAMES: 'Live games',
-  //   BACCARAT: 'Baccarat',
-  //   BACCARAT_NEW: 'Baccarat New',
-  //   ROULETTE: 'Roulette',
-  //   SCRACH_CARD: 'Scratch card'
-  // }
-}
-
-
-export const JWT_TOKEN_TYPES = {
-  LOGIN: 'login',
-  FORGOT_PASSWORD: 'forgot_password'
-}
-
 
 export const GLOBAL_SETTING = {
   FAUCET_SETTING: 'FAUCET_SETTING',
+  REDEEM_SETTING: 'REDEEM_SETTING'
+}
+
+export const VIP_TIER = {
+  DEFAULT_TIER: 0
+}
+
+export const DOCUMENT_TYPES = {
+  VERIFF: 'veriff',
+  OTHER: 'other'
+}
+
+// Document constants start
+export const DOCUMENT_STATUS_TYPES = {
+  PENDING: 'pending',
+  APPROVED: 'approved',
+  REJECTED: 'rejected',
+  REQUESTED: 'requested'
+}
+
+export const REPORT_TIME_PERIOD_FILTER = {
+  TODAY: 'today',
+  YESTERDAY: 'yesterday',
+  LAST_7_DAYS: 'last7days',
+  LAST_30_DAYS: 'last30days',
+  LAST_90_DAYS: 'last90days',
+  MONTH_TO_DATE: 'monthtodate',
+  WEEK_TO_DATE: 'weektodate',
+  YEAR_TO_DATE: 'yeartodate',
+  PREVIOUS_MONTH: 'previousmonth',
+  PREVIOUS_YEAR: 'previousyear'
 }

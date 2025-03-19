@@ -1,2 +1,3 @@
-import './affiliate'
+import './dashboardStats'
+import './agentCommission'
 import './rakeback'

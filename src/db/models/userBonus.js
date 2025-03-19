@@ -1,6 +1,3 @@
-'use strict'
-
-const { BONUS_STATUS } = require('@src/utils/constants/bonus.constants')
 
 module.exports = (sequelize, DataTypes) => {
   const UserBonus = sequelize.define('UserBonus', {
@@ -14,72 +11,47 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
     },
     bonusId: {
-      type: DataTypes.UUID,
+      type: DataTypes.INTEGER,
       allowNull: false
     },
-    // bonusAmount: {
-    //   type: DataTypes.DECIMAL(10, 2),
-    //   allowNull: false // Amount awarded to the user
-    // },
     gcAmount: {
-      type: DataTypes.DOUBLE,
-      defaultValue: 0.0
+      type: DataTypes.DOUBLE(10, 2),
+      allowNull: false,
+      defaultValue: 0
     },
     scAmount: {
-      type: DataTypes.DOUBLE,
-      defaultValue: 0.0
-    },
-    wageredAmount: {
-      type: DataTypes.DECIMAL(10, 2),
+      type: DataTypes.DOUBLE(10, 2),
       allowNull: false,
-      defaultValue: 0 // Track the amount wagered by the user
-    },
-    wagerRequirement: {
-      type: DataTypes.DECIMAL(10, 2),
-      allowNull: false // Total amount the user needs to wager
-    },
-    remainingWagerRequirement: {
-      type: DataTypes.DECIMAL(10, 2),
-      allowNull: false,
-      defaultValue: 0 // Remaining amount left to wager
-    },
-    bonusStatus: {
-      type: DataTypes.ENUM(Object.values(BONUS_STATUS)),
-      defaultValue: 'active' // Status of the bonus for the user
+      defaultValue: 0
     },
     awardedAt: {
       type: DataTypes.DATE,
       allowNull: false,
-      defaultValue: DataTypes.NOW // Date when the bonus was awarded
-    },
-    expiryDate: {
-      type: DataTypes.DATE,
-      allowNull: true // Expiry date for the user-specific bonus
+      defaultValue: DataTypes.NOW
     },
     referralCode: {
       type: DataTypes.STRING,
-      allowNull: true // Code used by referred player (only for referral bonuses)
+      allowNull: true
     },
     purchaseAmount: {
-      type: DataTypes.DECIMAL(10, 2),
-      allowNull: true // Deposit amount tied to the purchase bonus
+      type: DataTypes.DOUBLE(10, 2),
+      allowNull: true // Purchase amount tied to the purchase bonus
     }
   }, {
     tableName: 'user_bonuses',
     timestamps: true
-  })
+  });
 
-  // Associations
   UserBonus.associate = (models) => {
     UserBonus.belongsTo(models.User, {
       foreignKey: 'userId',
       as: 'user'
-    })
+    });
     UserBonus.belongsTo(models.Bonus, {
       foreignKey: 'bonusId',
-      as: 'bonus'
-    })
-  }
+      as: 'userBonus'
+    });
+  };
 
-  return UserBonus
-}
+  return UserBonus;
+};

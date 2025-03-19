@@ -1,6 +1,5 @@
-'use strict'
 import { BONUS_STATUS, BONUS_TYPE } from '@src/utils/constants/bonus.constants'
-
+'use strict'
 module.exports = (sequelize, DataTypes) => {
   const Bonus = sequelize.define('Bonus', {
     id: {
@@ -18,40 +17,20 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
     },
     gcAmount: {
-      type: DataTypes.DOUBLE,
+      type: DataTypes.DECIMAL(10, 2),
       defaultValue: 0.0
     },
     scAmount: {
-      type: DataTypes.DOUBLE,
+      type: DataTypes.DECIMAL(10, 2),
       defaultValue: 0.0
     },
-    minPurchase: {
+    percentage: {
       type: DataTypes.DECIMAL(10, 2),
       allowNull: true // applicable for purchase bonuses
-    },
-    promoCode: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
-    minWagerAmount: {
-      type: DataTypes.DECIMAL(10, 2),
-      allowNull: true // minimum amount required to wager
-    },
-    eligibleGames: {
-      type: DataTypes.STRING, // can be a JSON array of game IDs
-      allowNull: true // which games count towards the wagering
     },
     maxBonusLimit: {
       type: DataTypes.DECIMAL(10, 2),
       allowNull: true // for deposit/wager bonuses
-    },
-    wagerMultiplier: {
-      type: DataTypes.INTEGER,
-      allowNull: true // for wager-based bonuses
-    },
-    referralCode: {
-      type: DataTypes.STRING,
-      allowNull: true // for referral bonuses
     },
     imageUrl: {
       type: DataTypes.STRING,

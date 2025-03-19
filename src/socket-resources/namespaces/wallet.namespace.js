@@ -1,8 +1,8 @@
-import config from '@src/configs/app.config'
+import { SOCKET_NAMESPACES, SOCKET_ROOMS } from '@src/libs/constants'
 import db from '@src/db/models'
-import { SOCKET_NAMESPACES, SOCKET_ROOMS } from '@src/utils/constants/socket.constant'
-import Logger from '@src/libs/logger'
 import jwt from 'jsonwebtoken'
+import config from '@src/configs/app.config'
+import Logger from '@src/libs/logger'
 import { error } from 'winston'
 /**
  *
@@ -13,15 +13,17 @@ import { error } from 'winston'
 export default function (io) {
   const namespace = io.of(SOCKET_NAMESPACES.WALLET)
 
+  // namespace.use(authenticationSocketNamespaceMiddleWare)
   namespace.use(async (socket, next) => {
     try {
       const accessToken = socket.handshake.auth.accessToken || socket.handshake.headers.accesstoken
-      if (!accessToken) return next(new Error('TokenRequiredErrorType'))
+      if (!accessToken) {
+        return next(new Error('TokenRequiredErrorType'))
+      }
       const payLoad = await jwt.verify(accessToken, config.get('jwt.tokenSecret'))
 
       const findUser = await db.User.findOne({
-        where: { userId: payLoad.userId, isActive: true },
-        attributes: ['userId']
+        where: { userId: payLoad.userId }
       })
       if (!findUser) {
         return next(new Error('UserNotExistsErrorType'))

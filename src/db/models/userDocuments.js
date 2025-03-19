@@ -1,5 +1,7 @@
 'use strict'
 
+const { DOCUMENT_STATUS_TYPES, DOCUMENT_TYPES } = require("@src/utils/constant")
+
 module.exports = function (sequelize, DataTypes) {
   const UserDocument = sequelize.define('UserDocument', {
     userDocumentId: {
@@ -21,15 +23,26 @@ module.exports = function (sequelize, DataTypes) {
       type: DataTypes.INTEGER,
       defaultValue: 1
     },
+    documentType: {
+      type: DataTypes.ENUM(Object.values(DOCUMENT_TYPES)),
+      allowNull: false
+    },
     documentName: {
       type: DataTypes.STRING,
       allowNull: true
     },
     status: {
-      type: DataTypes.SMALLINT,
+      type: DataTypes.ENUM(Object.values(DOCUMENT_STATUS_TYPES)),
       allowNull: false,
-      defaultValue: 0,
-      comment: '0- pending, 1-approved, 2-rejected, 3-cancelled, 4-reRequested'
+      defaultValue: DOCUMENT_STATUS_TYPES.PENDING
+    },
+    signature: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    veriffApplicantId: {
+      type: DataTypes.STRING,
+      allowNull: true
     },
     actionee: {
       type: DataTypes.STRING,

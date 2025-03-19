@@ -1,4 +1,4 @@
-import { SOCKET_NAMESPACES } from '@src/utils/constants/socket.constant'
+import { SOCKET_NAMESPACES } from '@src/libs/constants'
 import contextSocketMiddleware from '../middlewares/contextSocket.middleware'
 import requestValidationSocketMiddleware from '../middlewares/requestValidationSocket.middleware'
 

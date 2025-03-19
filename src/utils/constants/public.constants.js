@@ -1,65 +1,67 @@
+export const COINS = {
+  GOLD_COIN: 'GC',
+  SWEEP_COIN: {
+    BONUS_SWEEP_COIN: 'BSC',
+    PURCHASE_SWEEP_COIN: 'PSC',
+    REDEEMABLE_SWEEP_COIN: 'RSC',
+  }
+}
+
 export const BANNER_TYPE = {
   HOME: 'home',
   CASINO: 'casino',
   OTHER: 'other'
 }
 
-export const COINS = {
-  GOLD_COIN: 'GC',
-  SWEEP_COIN: {
-    BONUS_SWEEP_COIN: 'BSC',
-    PURCHASE_SWEEP_COIN: 'PSC',
-    REDEEMABLE_SWEEP_COIN: 'RSC'
-  }
+const ASSETS = 'sweeps/assets'
+
+export const S3_FILE_PREFIX = {
+  bonus: ASSETS + '/bnonus',
+  packages: ASSETS + '/sweeps/packages',
+  casino_game: ASSETS + '/casino/games',
+  casino_provider: ASSETS + '/casino/providers',
+  casino_category: ASSETS + '/casino/categories',
+  promotions: ASSETS + '/promotions',
+  siteLogo: ASSETS + '/site_information/logo',
+  banner: ASSETS + '/site_information/banner',
+  imageGallery: ASSETS + '/gallery',
+  vipTier : ASSETS + '/vip_tier/icon'
 }
 
-export const TRANSACTION_PURPOSE = {
+export const LEDGER_PURPOSE = {
   // General transactions
   PURCHASE: 'purchase',
   REDEEM: 'redeem',
+  REDEEM_REFUND: 'redeem_refund',
 
   // Bonus transactions
   BONUS_CASH: 'bonus_cash',
-  BONUS_DEPOSIT: 'bonus_deposit',
+  BONUS_PURCHASE: 'bonus_purchase',
   BONUS_REFERRAL: 'bonus_referral',
   BONUS_TO_CASH: 'bonus_to_cash',
   BONUS_FORFEIT: 'bonus_forfeit',
   BONUS_WIN: 'bonus_win',
-  BONUS_DROP: 'bonus_drop',
   BONUS_RACKBACK: 'bonus_rackback',
+
 
   // Faucet transactions
   FAUCET_AWAIL: 'faucet_awail',
 
-  // Affiliate Commission
-  AFFILIATE_COMMISSION: 'affiliate_commission',
-
   // Spin Wheel transaction
   WHEEL_REWARD: "wheel_reward",
 
-  // Chatrain transaction
-  EMIT: 'emit_chatrain',
-  CHATRAIN: 'chatrain',
-  CLAIM: 'claim_chatrain',
-
-  //Tip transaction
-  SEND_TIP: 'send_tip',
-  TIP: 'tip',
-  RECEIVE_TIP: 'receive_tip'
-}
-
-// Casino transactions
-export const CASINO_TRANSACTION_PURPOSE = {
+  // Casino transactions
   CASINO_BET: 'casino_bet',
   CASINO_REFUND: 'casino_refund',
   CASINO_WIN: 'casino_win',
   JACKPOT_WIN: 'jackpot_win',
   PROMO_WIN: 'promo_win',
-  BONUS_RACKBACK: 'bonus_rackback',
-  BONUS_DROP: 'bonus_drop',
   GAME_ROLLBACK: 'game_rollback',
   CASINO_WIN_ROLLBACK: 'casino_win_rollback',
-  CASINO_BET_ROLLBACK: 'casino_bet_rollback'
+  CASINO_BET_ROLLBACK: 'casino_bet_rollback',
+
+  // agent transaction
+  AGENT_COMMISSION: 'agent_commission'
 }
 
 export const LEDGER_TYPES = {
@@ -67,56 +69,61 @@ export const LEDGER_TYPES = {
   CREDIT: 'Credit'
 }
 
+export const LEDGER_DIRECTIONS = {
+  [LEDGER_PURPOSE.PURCHASE]: LEDGER_TYPES.CREDIT,
+  [LEDGER_PURPOSE.REDEEM]: LEDGER_TYPES.DEBIT,
+  [LEDGER_PURPOSE.CASINO_BET]: LEDGER_TYPES.DEBIT,
+  [LEDGER_PURPOSE.CASINO_WIN]: LEDGER_TYPES.CREDIT,
+  [LEDGER_PURPOSE.CASINO_WIN_ROLLBACK]: LEDGER_TYPES.DEBIT,
+  [LEDGER_PURPOSE.CASINO_BET_ROLLBACK]: LEDGER_TYPES.CREDIT,
+  [LEDGER_PURPOSE.CASINO_REFUND]: LEDGER_TYPES.CREDIT,
+  [LEDGER_PURPOSE.FAUCET_AWAIL]: LEDGER_TYPES.CREDIT,
+  [LEDGER_PURPOSE.WHEEL_REWARD]: LEDGER_TYPES.CREDIT,
+
+}
+
+
+
+
 export const LEDGER_TRANSACTION_TYPES = {
   CASINO: 'casino',
   BANKING: 'banking',
-  WITHDRAW: 'withdraw',
-  BONUS: 'bonus',
-  CHATRAIN: 'chatrain',
-  TIP: 'tip',
-  COMMISSION: 'commission'
-}
-export const VIP_TIER_NAMES = {
-  BRONZE: 'Bronze',
-  SILVER: 'silver',
-  GOLD: 'gold'
+  WITHDRAW: 'withdraw'
 }
 
-export const LEDGER_DIRECTIONS = {
-  [TRANSACTION_PURPOSE.PURCHASE]: LEDGER_TYPES.CREDIT,
-  [TRANSACTION_PURPOSE.REDEEM]: LEDGER_TYPES.DEBIT,
-  [CASINO_TRANSACTION_PURPOSE.CASINO_BET]: LEDGER_TYPES.DEBIT,
-  [CASINO_TRANSACTION_PURPOSE.CASINO_WIN]: LEDGER_TYPES.CREDIT,
-  [CASINO_TRANSACTION_PURPOSE.CASINO_REFUND]: LEDGER_TYPES.CREDIT,
-  [CASINO_TRANSACTION_PURPOSE.BONUS_DROP]: LEDGER_TYPES.CREDIT,
-  [CASINO_TRANSACTION_PURPOSE.BONUS_RACKBACK]: LEDGER_TYPES.CREDIT,
-  [TRANSACTION_PURPOSE.FAUCET_AWAIL]: LEDGER_TYPES.CREDIT,
-  [TRANSACTION_PURPOSE.WHEEL_REWARD]: LEDGER_TYPES.CREDIT,
-  [CASINO_TRANSACTION_PURPOSE.CASINO_BET_ROLLBACK]: LEDGER_TYPES.CREDIT,
-  [CASINO_TRANSACTION_PURPOSE.CASINO_WIN_ROLLBACK]: LEDGER_TYPES.DEBIT,
-  [TRANSACTION_PURPOSE.EMIT]: LEDGER_TYPES.DEBIT,
-  [TRANSACTION_PURPOSE.CLAIM]: LEDGER_TYPES.CREDIT,
-  [TRANSACTION_PURPOSE.CHATRAIN]: LEDGER_TYPES.DEBIT,
-  [TRANSACTION_PURPOSE.SEND_TIP]: LEDGER_TYPES.DEBIT,
-  [TRANSACTION_PURPOSE.RECEIVE_TIP]: LEDGER_TYPES.CREDIT,
-  [TRANSACTION_PURPOSE.AFFILIATE_COMMISSION]: LEDGER_TYPES.CREDIT,
-}
+
 
 export const WITHDRAWAL_STATUS = {
   PENDING: 'Pending',
   SUCCESS: 'Success',
-  CANCELLED: 'Cancelled'
+  CANCELLED: 'Cancelled',
+}
+
+export const SC_GC_REQUIRED_PLAY_UNITS = {
+  DAYS : 'days',
+  MONTHS : 'months',
+  YEARS : 'years'
 }
 
 export const GRADUAL_LOSS_PERIOD_UNITS = {
-  DAYS: 'days',
-  MONTHS: 'months',
-  YEARS: 'years'
+  DAYS : 'days',
+  MONTHS : 'months',
+  YEARS : 'years'
+}
+
+export const WALLET_OWNER_TYPES = {
+  USER: 'user',
+  ADMIN: 'admin'
+}
+
+export const WALLET_DIRECTIONS = {
+  SEND: 'send',
+  REDEEM: 'redeem'
 }
 
 export const TICKET_STATUSES = {
-  OPEN: 'open',
-  ACTIVE: 'active',
-  RESOLVED: 'resolved',
-  CLOSED: 'closed'
+  OPEN : 'open',
+  ACTIVE : 'active',
+  RESOLVED : 'resolved',
+  CLOSED : 'closed'
 }

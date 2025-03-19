@@ -21,70 +21,56 @@ module.exports = function (sequelize, DataTypes) {
         allowNull: true,
         description: 'Image of icon which represent level'
       },
-      level: { // Priority Order
+      level: {
         type: DataTypes.INTEGER,
         allowNull: false,
         description: 'Defines the hierarchy of the tier, with higher numbers for better tiers.'
       },
-      gamesPlayed: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        description: 'Minimum total games played to qualify for this tier'
-
-      },
       wageringThreshold: {
         type: DataTypes.INTEGER,
         allowNull: false,
-        description: 'Minimum spend amount required for this tier'
-
+        description: 'Minimum spend amount required for this tier - minimum amount of bet need to place'
+      },
+      gamesPlayed: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 0,
+        description: 'Minimum total no of games played to qualify for this tier',
       },
       bigBetsThreshold: {
         type: DataTypes.INTEGER,
         allowNull: false,
-        description: 'Number of bets above a specific amount (defined in the next field)'
+        defaultValue: 0,
+        description: 'Number of bets above a specific amount (defined in the next field)',
       },
       bigBetAmount: {
         type: DataTypes.INTEGER,
         allowNull: false,
-        description: 'Minimum bet amount to qualify as a big bet.'
+        defaultValue: 0,
+        description: 'Minimum bet amount to qualify as a big bet.',
       },
       depositsThreshold: {
         type: DataTypes.INTEGER,
         allowNull: false,
-        description: 'Total deposit amount required to qualify for this tier.'
-
+        defaultValue: 0,
+        description: 'Total deposit amount required to qualify for this tier.',
       },
       loginStreak: {
         type: DataTypes.INTEGER,
         allowNull: false,
         defaultValue: 0,
-        description: 'Consecutive daily logins required for qualification.'
-
+        description: 'Consecutive daily logins required for qualification.',
       },
       referralsCount: {
         type: DataTypes.INTEGER,
         allowNull: false,
         defaultValue: 0,
-        description: 'Minimum number of referrals required to qualify.'
-
+        description: 'Minimum number of referrals required to qualify.',
       },
-      // sweepstakesEntries: {
-      //   type: DataTypes.INTEGER,
-      //   allowNull: false,
-      //   description: 'Number of sweepstakes entries required for qualification.'
-
-      // },
-      // sweepstakesWins: {
-      //   type: DataTypes.INTEGER,
-      //   allowNull: false,
-      //   description: 'Number of sweepstakes wins required for this tier.'
-
-      // },
       timeBasedConsistency: {
         type: DataTypes.INTEGER,
         allowNull: false,
-        description: 'Minimum number of months the player needs to meet spending criteria (e.g., $1,000/month).'
-
+        description: 'Minimum number of days the player needs to meet spending criteria (e.g., $1,000/month).',
       },
       isActive: {
         type: DataTypes.BOOLEAN,
@@ -115,6 +101,7 @@ module.exports = function (sequelize, DataTypes) {
       ]
     }
   )
+
   VipTier.associate = function (models) {
     VipTier.hasMany(models.UserDetails, { foreignKey: 'vipTierId' })
     VipTier.hasMany(models.Reward, { foreignKey: 'vipTierId', as: 'rewards' })

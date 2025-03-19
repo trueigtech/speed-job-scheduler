@@ -2,7 +2,6 @@ import { v4 as uuid } from 'uuid'
 import models, { sequelize } from '@src/db/models'
 import Logger from '@src/libs/logger'
 import responseValidationSocketMiddleware from './responseValidationSocket.middleware'
-import db from '@src/db/models'
 
 /**
  * A Socket Request Data type
@@ -38,7 +37,7 @@ import db from '@src/db/models'
  * @return {*}
  */
 export default function contextSocketMiddleware (socket, socketSchemas = {}) {
-  return async function (args, next) {
+  return function (args, next) {
     const [event, payload, callback] = args
 
     const context = {}
@@ -49,7 +48,7 @@ export default function contextSocketMiddleware (socket, socketSchemas = {}) {
     context.sequelize = sequelize
     context.dbModels = models
     context.logger = Logger
-    context.sequelizeTransaction = await db.sequelize.transaction()
+
     args[1] = { payload, context }
     args[2] = responseValidationSocketMiddleware.bind(null, context, event, callback)
     next()

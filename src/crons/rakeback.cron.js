@@ -11,7 +11,7 @@ rakebackQueue.add(
     }
   }
 ).then(() => {
-  console.log('Job added to the queue! FROM CRON');
+  console.log('Rackback Job added to the queue! FROM CRON');
 }).catch((error) => {
   console.error('Error adding job to queue:', error);
 });

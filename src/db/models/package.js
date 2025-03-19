@@ -38,51 +38,51 @@ module.exports = function (sequelize, DataTypes) {
       type: DataTypes.STRING,
       allowNull: true
     },
-    orderId: {
-      type: DataTypes.INTEGER,
-      defaultValue: 0
-    },
-    validTill: {
-      type: DataTypes.DATE,
-      allowNull: true
-    },
-    validFrom: {
-      type: DataTypes.DATE,
-      allowNull: true
-    },
-    customizationSettings: {
-      type: DataTypes.JSONB,
-      allowNull: true
-    },
-    maxPurchasePerUser: {
-      type: DataTypes.INTEGER,
-      allowNull: true
-    },
+    // orderId: {
+    //   type: DataTypes.INTEGER,
+    //   defaultValue: 0
+    // },
+    // validTill: {
+    //   type: DataTypes.DATE,
+    //   allowNull: true
+    // },
+    // validFrom: {
+    //   type: DataTypes.DATE,
+    //   allowNull: true
+    // },
+    // customizationSettings: {
+    //   type: DataTypes.JSONB,
+    //   allowNull: true
+    // },
+    // maxPurchasePerUser: {
+    //   type: DataTypes.INTEGER,
+    //   allowNull: true
+    // },
     discountAmount: {
       type: DataTypes.DOUBLE,
       defaultValue: 0.0
     },
-    discountEndDate: {
-      allowNull: true,
-      type: DataTypes.DATE
-    },
+    // discountEndDate: {
+    //   allowNull: true,
+    //   type: DataTypes.DATE
+    // },
     //  The price of the package decreases after certain thresholds are met (e.g., after 100 and 500 purchases).
     // rules: [
     //  { threshold: 100, newPrice: 44.99 },  // Price drops after 100 purchases
     //  { threshold: 500, newPrice: 39.99 }   // Further price drop after 500 purchases
     // ]
-    pricingTiers: {
-      type: DataTypes.JSONB,
-      allowNull: true
-    },
-    bonusId: {
-      type: DataTypes.INTEGER,
-      allowNull: true
-    },
-    giftable: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: false
-    },
+    // pricingTiers: {
+    //   type: DataTypes.JSONB,
+    //   allowNull: true
+    // },
+    // bonusId: {
+    //   type: DataTypes.INTEGER,
+    //   allowNull: true
+    // },
+    // giftable: {
+    //   type: DataTypes.BOOLEAN,
+    //   defaultValue: false
+    // },
     createdAt: {
       allowNull: false,
       type: DataTypes.DATE
@@ -98,9 +98,9 @@ module.exports = function (sequelize, DataTypes) {
     timestamps: true,
     underscored: true
   })
-  Package.associate = function (model) {
-    Package.belongsTo(model.Bonus, { foreignKey: 'bonusId' })
-  }
+  // Package.associate = function (model) {
+  //   Package.belongsTo(model.Bonus, { foreignKey: 'bonusId' })
+  // }
 
   return Package
 }
