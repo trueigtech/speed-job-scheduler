@@ -6,7 +6,7 @@ import { Op } from "sequelize";
 import { TransactionHandlerService } from "../wallet";
 
 export class AgentCommissionHandler extends BaseHandler {
-  async run () {
+  async run() {
 
     try {
       // Define the date range (last Saturday to this Friday)
@@ -57,21 +57,26 @@ export class AgentCommissionHandler extends BaseHandler {
 
         // Calculate commission out
         const commissionOutQuery = `
+        SELECT
+          COALESCE(SUM(
+            CASE 
+              WHEN total_won >= total_wagered THEN 0 
+              ELSE earning_multiplier * (total_wagered - total_won) 
+            END
+          ), 0) AS commission_out
+        FROM (
           SELECT
-            COALESCE(SUM(earning_multiplier * (total_wagered - total_won)), 0) AS commission_out
-          FROM (
-            SELECT
-              a.earning_multiplier,
-              SUM(CASE WHEN l.currency_code != 'GC' AND l.purpose = '${LEDGER_PURPOSE.CASINO_BET}' THEN l.amount ELSE 0 END) AS total_wagered,
-              SUM(CASE WHEN l.currency_code != 'GC' AND l.purpose IN ('${LEDGER_PURPOSE.CASINO_WIN}', '${LEDGER_PURPOSE.CASINO_REFUND}') THEN l.amount ELSE 0 END) AS total_won
-            FROM admin_users a
-            JOIN users u ON u.path LIKE CONCAT(a.path, '%')
-            JOIN wallets w ON w.owner_id = u.user_id AND w.owner_type = 'user'
-            JOIN ledgers l ON l.from_wallet_id = w.id OR l.to_wallet_id = w.id
-            WHERE a.parent_id = :adminUserId AND l.created_at BETWEEN :startDate AND :endDate
-            GROUP BY a.earning_multiplier
-          ) AS admin_earnings;
-        `;
+            a.earning_multiplier,
+            SUM(CASE WHEN l.currency_code != 'GC' AND l.purpose = '${LEDGER_PURPOSE.CASINO_BET}' THEN l.amount ELSE 0 END) AS total_wagered,
+            SUM(CASE WHEN l.currency_code != 'GC' AND l.purpose IN ('${LEDGER_PURPOSE.CASINO_WIN}', '${LEDGER_PURPOSE.CASINO_REFUND}') THEN l.amount ELSE 0 END) AS total_won
+          FROM admin_users a
+          JOIN users u ON u.path LIKE CONCAT(a.path, '%')
+          JOIN wallets w ON w.owner_id = u.user_id AND w.owner_type = 'user'
+          JOIN ledgers l ON l.from_wallet_id = w.id OR l.to_wallet_id = w.id
+        ${whereConditionForCommisionOut}
+          GROUP BY a.earning_multiplier
+        ) AS admin_earnings;
+      `;
 
         const commissionOutResult = await db.sequelize.query(commissionOutQuery, {
           type: db.Sequelize.QueryTypes.SELECT,
