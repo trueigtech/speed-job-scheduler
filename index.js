@@ -5,6 +5,7 @@ import socketServer from '@src/socket-resources'
 import gracefulShutDown from '@src/libs/gracefulShutDown'
 import { Logger } from '@src/libs/logger'
 import '@src/crons'
+import '@src/workers'
 
 const httpServer = createServer(app)
 

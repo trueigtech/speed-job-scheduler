@@ -1,131 +1,54 @@
-import db from '@src/db/models';
-import { BaseHandler } from '@src/libs/logicBase';
-import { TRANSACTION_PURPOSE } from '@src/utils/constants/public.constants';
-import sequelize, { Op } from 'sequelize';
-import { TransactionHandlerHandler } from "@src/services/wallet";
-import { Logger } from '@src/libs/logger';
-
+import db from '@src/db/models'
+import { BaseHandler } from '@src/libs/logicBase'
+import { Op, fn, col } from 'sequelize'
+import { Logger } from '@src/libs/logger'
 
 export class AffiliateCommissionService extends BaseHandler {
+  async run () {
+    const t = await db.sequelize.transaction()
 
-    async run() {
-        try {
+    try {
+      //  Get last 7 days
+      const startDate = new Date()
+      startDate.setDate(startDate.getDate() - 7)
 
-            const startDate = new Date();
-            startDate.setDate(startDate.getDate() - 7);
-            const betAmounts = await db.CasinoTransaction.findAll({
-                attributes: [
-                    'userId',
-                    [sequelize.fn('SUM', sequelize.col('casinoLedger.amount')), 'totalBetAmount']
-                ],
-                include: [
-                    {
-                        model: db.TransactionLedger,
-                        as: 'casinoLedger',
-                        attributes: [],
-                        required: true,
-                        where: {
-                            transaction_type: 'casino',
-                            currency_code: { [Op.ne]: 'GC' } // sc amount check
-                        },
-                        on: {
-                            transactionId: sequelize.where(
-                                sequelize.col('casinoLedger.transaction_id'),
-                                '=',
-                                sequelize.col('CasinoTransaction.id')
-                            )
-                        }
-                    },
-                    {
-                        model: db.User,
-                        attributes: ['userId', 'refParentId'],
-                        required: true,
-                        where: {
-                            refParentId: { [Op.ne]: null }
-                        }
-                    }
-                ],
-                where: {
-                    created_at: {
-                        [Op.gte]: startDate
-                    }
-                },
-                group: [
-                    'CasinoTransaction.user_id',
-                    'User.user_id',
-                    'User.ref_parent_id'
-                ],
-                raw: true
-            });
+      const affiliates = await db.UserAffiliations.findAll({
+        where: {
+          isActive: true,
+          created_at: {
+            [Op.gte]: startDate
+          }
+        },
+        attributes: [
+          'affiliateUserId',
+          [fn('SUM', col('earnedCommission')), 'totalCommission']
+        ],
+        group: ['affiliateUserId'],
+        raw: true,
+        transaction: t
+      })
 
-            for (const record of betAmounts) {
-                const { userId, totalBetAmount, 'User.refParentId': refParentId } = record;
-                const transaction = await db.sequelize.transaction();
+      for (const affiliate of affiliates) {
+        const { affiliateUserId, totalCommission } = affiliate
 
-                try {
-                    const referrer = await db.User.findOne({
-                        where: { userId: refParentId },
-                        attributes: ['userId', 'username'],
-                        include: [
-                            {
-                                model: db.UserDetails,
-                                as: 'userDetails',
-                                attributes: ['vipTierId'],
-                            },
-                        ],
-                        transaction,
-                    });
+        if (parseFloat(totalCommission) > 0) {
+          const wallet = await db.Wallet.findOne({
+            where: { userId: affiliateUserId },
+            transaction: t
+          })
 
-                    if (!referrer) {
-                        await transaction.rollback();
-                        continue;
-                    }
-
-                    const vipTierId = referrer.userDetails.vipTierId;
-
-                    const reward = await db.Reward.findOne({
-                        where: { vipTierId },
-                        attributes: ['commissionRate'],
-                        transaction,
-                    });
-
-                    if (!reward) {
-                        console.log(`No reward entry found for VIP Tier ID: ${vipTierId}`);
-                        await transaction.rollback();
-                        continue;
-                    }
-
-                    const commissionRate = reward.commissionRate;
-
-                    const commissionEarned = parseFloat(totalBetAmount * (commissionRate / 100)).toFixed(2);
-
-                    await TransactionHandlerHandler.execute(
-                        {
-                            userId: refParentId,
-                            currencyCode: 'BSC',
-                            purpose: TRANSACTION_PURPOSE.RECEIVE_TIP,
-                            amount: parseFloat(commissionEarned),
-                        }, { sequelizeTransaction: transaction });
-
-                    let affiliateRelation = await db.UserAffiliations.findOne(
-                        { where: { affiliateUserId: refParentId, referredUserId: userId }, transaction });
-
-                    if (affiliateRelation) {
-                        affiliateRelation.earnedCommission += parseFloat(commissionEarned);
-                        affiliateRelation.wageredAmount += parseFloat(totalBetAmount);
-                        await affiliateRelation.save({ transaction });
-                    }
-
-                    await transaction.commit();
-                } catch (error) {
-                    console.error("Error processing commission:", error);
-                    await transaction.rollback();
-                }
-            }
-
-            return betAmounts;
-        } catch (error) {
-            Logger.error({ message: error })
+          if (wallet) {
+            wallet.balance += parseFloat(totalCommission)
+            await wallet.save({ transaction: t })
+          }
         }
+      }
+
+      await t.commit()
+      Logger.info('Weekly affiliate payments settled successfully.')
+    } catch (err) {
+      await t.rollback()
+      Logger.error(' Error settling weekly affiliate payments:', err)
     }
+  }
 }

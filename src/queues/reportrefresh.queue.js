@@ -1,6 +1,6 @@
 import Bull from 'bull'
 import Redis from 'ioredis'
-import queueWorkerRedisClient from '@src/libs/queueWorkerRedisClient';
+import queueWorkerRedisClient from '@src/libs/queueWorkerRedisClient'
 
 const opts = {
   createClient: function (type, opts) {
@@ -20,7 +20,7 @@ const opts = {
     removeOnComplete: 10
   }
 }
-export const rakebackQueue = new Bull('Bonus-Queue', {
+export const ReportRefreshQueue = new Bull('Report-Refresh-Queue', {
   ...opts
-});
-export const JOB_RAKEBACK = 'Rakeback';
+})
+export const JOB_REPORTREFRESH = 'Report-Refresh'

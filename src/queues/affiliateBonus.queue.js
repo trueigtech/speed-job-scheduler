@@ -17,14 +17,13 @@ const opts = {
   defaultJobOptions: {
     attempts: 3, // Retry 3 times if the job fails
     backoff: {
-        type: 'exponential', // Use exponential backoff
-        delay: 500 // Start with 500ms delay before retrying
+      type: 'exponential', // Use exponential backoff
+      delay: 500 // Initial delay of 500ms
     },
-    removeOnComplete: 100 // Keep last 100 successful jobs for debugging
+    removeOnComplete: 100, // Keep last 100 completed jobs
+    removeOnFail: 50 // Optional: Keep last 50 failed jobs
+  }
 }
 
-}
-export const agentCommissionQueue = new Bull('AgentCommission-Queue', {
-  ...opts
-});
-export const JOB_AGENT_COMMISSION = 'AgentCommission';
+export const affiliateBonusQueue = new Bull('AffiliateBonus-Queue', opts)
+export const JOB_AFFILIATE_BONUS = 'Affiliate-Bonus'
